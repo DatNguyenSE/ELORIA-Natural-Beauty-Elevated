@@ -20,7 +20,7 @@ env:
   ECS_CLUSTER: sportzone-cluster
   ECS_SERVICE: sportzone-service
   ECS_TASK_DEFINITION_FAMILY: sportzone-api
-  ECS_CONTAINER_NAME: sportzone-web
+  ECS_CONTAINER_NAME: Main
 
 jobs:
   deploy:
