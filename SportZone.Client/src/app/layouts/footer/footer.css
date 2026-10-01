@@ -43,26 +43,14 @@
 .eloria-footer__brand {}
 
 .eloria-footer__logo {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
   margin-bottom: 16px;
 }
 
-.eloria-footer__logo-name {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 22px;
-  font-weight: 500;
-  letter-spacing: 0.22em;
-  color: var(--bg);
-}
-
-.eloria-footer__logo-tag {
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(246, 239, 230, 0.55);
+.eloria-footer__logo-image {
+  width: 156px;
+  height: 156px;
+  display: block;
+  object-fit: contain;
 }
 
 .eloria-footer__desc {

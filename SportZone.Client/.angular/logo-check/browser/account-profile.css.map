@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/features/user/account-profile/account-profile.css"],
+  "sourcesContent": [".material-symbols-outlined {\r\n    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;\r\n}\r\n.material-symbols-outlined.fill {\r\n    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;\r\n}"],
+  "mappings": ";AAAA,CAAA;AACI;IAAA,OAAA,CAAA;IAAA,OAAA,GAAA;IAAA,OAAA,CAAA;IAAA,OAAA;AACJ;AACA,CAHA,yBAGA,CAAA;AACI;IAAA,OAAA,CAAA;IAAA,OAAA,GAAA;IAAA,OAAA,CAAA;IAAA,OAAA;AACJ;",
+  "names": []
+}
