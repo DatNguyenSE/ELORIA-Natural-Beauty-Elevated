@@ -491,3 +491,7 @@ dist/
 bin/
 obj/
 node_modules/
+
+AWS-CONSOLE-SETUP-GUIDE.md
+AWS-DEPLOYMENT-GUIDE.md
+GITHUB-ACTIONS-ECS-SETUP.md
