@@ -1,0 +1,139 @@
+:host {
+  display: block;
+}
+
+.fail-root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 40px 20px;
+  background-color: #FBF7F1;
+  font-family: 'Be Vietnam Pro', -apple-system, sans-serif;
+}
+
+.fail-card {
+  background: #FFFFFF;
+  border: 1px solid #EBE4DA;
+  padding: 48px 36px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(47, 42, 36, 0.04);
+  text-align: center;
+  max-width: 480px;
+  width: 100%;
+}
+
+.fail-icon-wrap {
+  width: 64px;
+  height: 64px;
+  background: #FDF1F0;
+  color: #C0392B;
+  border: 1px solid #FCD5D0;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 20px;
+}
+
+.fail-icon {
+  width: 30px;
+  height: 30px;
+}
+
+.fail-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #8C8479;
+  margin-bottom: 8px;
+}
+
+.fail-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  color: #1F261E;
+  margin: 0 0 12px;
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.fail-desc {
+  color: #7A7267;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+.fail-order-code {
+  margin-top: 10px;
+  color: #1F261E;
+  padding: 6px 14px;
+  background: #FAF7F2;
+  border: 1px solid #EBE4DA;
+  border-radius: 9999px;
+  display: inline-block;
+  font-size: 12.5px;
+}
+
+.fail-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+@media (min-width: 480px) {
+  .fail-actions {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+.fail-btn {
+  padding: 11px 22px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fail-btn--primary {
+  background: #1F261E;
+  color: #FAF6EF;
+  border: 1px solid #1F261E;
+}
+
+.fail-btn--primary:hover {
+  background: #8A9A7B;
+  border-color: #8A9A7B;
+  color: #FFFFFF;
+}
+
+.fail-btn--outline {
+  background: #FAF7F2;
+  color: #1F261E;
+  border: 1px solid #E0D5C7;
+}
+
+.fail-btn--outline:hover {
+  background: #EBE4DA;
+}
+
+.fail-support {
+  font-size: 11.5px;
+  color: #9C9388;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.fail-support a {
+  color: #5F6F52;
+  font-weight: 600;
+  text-decoration: underline;
+}

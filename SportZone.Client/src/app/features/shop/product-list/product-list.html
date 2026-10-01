@@ -1,0 +1,135 @@
+<!-- ═══════════════════════════════════════════════════
+     ELORIA — TRANG DANH SÁCH SẢN PHẨM
+     ═══════════════════════════════════════════════════ -->
+
+<div class="el-cat-banner">
+  <!-- Lá trang trí góc phải -->
+  <svg class="el-cat-banner__deco" viewBox="0 0 300 400" fill="none" aria-hidden="true">
+    <path d="M150 20 C80 70 60 200 110 340 C160 380 230 340 260 260 C290 180 250 80 150 20Z" fill="#8A9A7B"/>
+    <path d="M150 20 L150 340" stroke="#5F6F52" stroke-width="1.5" stroke-dasharray="6 4"/>
+  </svg>
+
+  <div class="el-cat-banner__inner">
+    <!-- Breadcrumb -->
+    <nav class="el-cat-banner__nav" aria-label="Điều hướng">
+      <button (click)="goBack()" class="el-cat-banner__back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M19 12H5m0 0l7 7m-7-7l7-7"/>
+        </svg>
+        Quay lại
+      </button>
+      <span class="el-cat-banner__sep">/</span>
+      <span class="el-cat-banner__crumb">{{ categoryName() }}</span>
+    </nav>
+
+    <!-- Tiêu đề -->
+    <h1 class="el-cat-banner__title">{{ categoryName() }}</h1>
+    <div class="el-cat-banner__meta">
+      <span *ngIf="products().length > 0" class="el-cat-banner__count">
+        {{ products().length }} sản phẩm
+      </span>
+      <p class="el-cat-banner__sub">Bộ sản phẩm chăm sóc tóc và da đầu từ thiên nhiên ELORIA</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── MAIN ── -->
+<main class="el-cat-main">
+
+  <!-- Filter chips -->
+  <div *ngIf="subCategories().length > 0" class="el-cat-filters">
+    <button (click)="filterBySubCategory(0)"
+            class="el-cat-filter-btn"
+            [class.el-cat-filter-btn--active]="activeFilterId() === 0">
+      Tất cả
+    </button>
+    <button *ngFor="let sub of subCategories()"
+            (click)="filterBySubCategory(sub.id)"
+            class="el-cat-filter-btn"
+            [class.el-cat-filter-btn--active]="activeFilterId() === sub.id">
+      {{ sub.categoryName }}
+    </button>
+  </div>
+
+  <!-- Sort bar -->
+  <div class="el-cat-sort-bar">
+    <span class="el-cat-sort-label">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <path d="M3 6h18M7 12h10M11 18h2"/>
+      </svg>
+      Sắp xếp
+    </span>
+    <select (change)="onSortChange($event)" class="el-cat-sort-select" aria-label="Sắp xếp sản phẩm">
+      <option value="newest">Mới nhất</option>
+      <option value="oldest">Cũ nhất</option>
+      <option value="priceAsc">Giá tăng dần</option>
+      <option value="priceDesc">Giá giảm dần</option>
+      <option value="mostSale">Giảm giá nhiều nhất</option>
+    </select>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="products().length === 0 && isLoading()" class="el-cat-empty">
+    <div class="el-cat-spinner"></div>
+    <p>Đang tải sản phẩm...</p>
+  </div>
+
+  <!-- Empty -->
+  <div *ngIf="products().length === 0 && !isLoading()" class="el-cat-empty">
+    <p>Không tìm thấy sản phẩm nào trong mục này.</p>
+  </div>
+
+  <!-- Product grid -->
+  <div *ngIf="products().length > 0" class="el-cat-grid">
+    @for (p of sortedProducts(); track p.id) {
+    <div class="el-cat-card" [routerLink]="['/product-detail', p.id]"
+         [attr.aria-label]="p.name">
+
+      <div class="el-cat-card__img-wrap">
+
+        <!-- Badges -->
+        @if (p.discount && p.discount > 0) {
+          <div class="el-cat-card__badge el-cat-card__badge--sale">-{{ p.discount }}%</div>
+        }
+        @if (p.isNew) {
+          <div class="el-cat-card__badge el-cat-card__badge--new"
+               [style.top]="(p.discount && p.discount > 0) ? '34px' : '10px'">
+            Mới
+          </div>
+        }
+
+        <!-- Wishlist -->
+        <button class="el-cat-card__wish" (click)="$event.stopPropagation()"
+                aria-label="Thêm vào yêu thích">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </button>
+
+        <!-- Ảnh sản phẩm -->
+        <img [src]="p.imageUrl" [alt]="p.name"
+             class="el-cat-card__img"
+             loading="lazy"
+             width="300" height="400">
+      </div>
+
+      <!-- Info -->
+      <div class="el-cat-card__info">
+        <div class="el-cat-card__price-row">
+          <span class="el-cat-card__price"
+                [class.el-cat-card__price--sale]="p.discount && p.discount > 0">
+            {{ (p.price * (1 - (p.discount ?? 0) / 100)) | number:'1.0-0' }}đ
+          </span>
+          @if (p.discount && p.discount > 0) {
+            <span class="el-cat-card__price-old">{{ p.price | number:'1.0-0' }}đ</span>
+          }
+        </div>
+        <p class="el-cat-card__name">{{ p.name }}</p>
+        <p class="el-cat-card__cat">{{ p.categoryName }}</p>
+      </div>
+
+    </div>
+    }
+  </div>
+
+</main>

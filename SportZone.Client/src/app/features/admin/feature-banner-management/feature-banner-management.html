@@ -1,0 +1,265 @@
+<div class="banner-admin-root">
+  
+  <!-- ══ PAGE HEADER ══ -->
+  <div class="banner-header">
+    <div>
+      <div class="banner-header__badge">
+        <span class="banner-header__dot"></span>
+        <span>CHIẾN DỊCH & QUẢN LÝ BANNER</span>
+      </div>
+      <h1 class="banner-header__title">Banner Trang Chủ & Bộ Sưu Tập</h1>
+      <p class="banner-header__subtitle">
+        Tùy biến banner quảng bá dòng sản phẩm chăm sóc tóc ELORIA trên trang chủ.
+      </p>
+    </div>
+    <div class="banner-header__count">
+      <span class="banner-header__count-num">{{ allFeatures().length }}</span>
+      <span class="banner-header__count-label">Chiến dịch hiện có</span>
+    </div>
+  </div>
+
+  <!-- ══ MAIN GRID ══ -->
+  <div class="banner-grid">
+
+    <!-- ── CỘT TRÁI: FORM TẠO / SỬA ── -->
+    <div class="banner-form-card">
+      <div class="banner-form-header">
+        <div class="banner-form-header__icon" [class.editing]="isEditing">
+          <svg *ngIf="!isEditing" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <svg *ngIf="isEditing" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+        </div>
+        <div>
+          <h2 class="banner-form-header__title">
+            {{ isEditing ? 'Cập Nhật Chiến Dịch' : 'Thêm Banner / Chiến Dịch Mới' }}
+          </h2>
+          <p class="banner-form-header__desc">
+            {{ isEditing ? 'Chỉnh sửa thông số cho banner #' + currentFeature.id : 'Thiết lập chiến dịch hiển thị trang chủ' }}
+          </p>
+        </div>
+        <button *ngIf="isEditing" (click)="onCancelEdit()" type="button" class="banner-cancel-btn">
+          Hủy bỏ
+        </button>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" class="banner-form">
+        <!-- Tên Feature / Banner -->
+        <div class="banner-form-group">
+          <label class="banner-label">
+            Tên Chiến Dịch / Banner <span class="banner-required">*</span>
+          </label>
+          <input
+            type="text"
+            [(ngModel)]="currentFeature.name"
+            name="name"
+            required
+            placeholder="VD: Chăm Sóc Toàn Diện Mùa Thu..."
+            class="banner-input"
+          />
+        </div>
+
+        <!-- Switch hiển thị Home Banner -->
+        <div class="banner-switch-wrap">
+          <div class="banner-switch-label">
+            <span class="banner-switch-title">Hiển thị Banner Trang Chủ</span>
+            <span class="banner-switch-desc">Xuất hiện nổi bật trên carousel đầu trang</span>
+          </div>
+          <input
+            type="checkbox"
+            [(ngModel)]="currentFeature.isBanner"
+            name="isBanner"
+            class="banner-checkbox"
+          />
+        </div>
+
+        <!-- Mô tả ngắn -->
+        <div class="banner-form-group">
+          <label class="banner-label">Mô tả chiến dịch</label>
+          <textarea
+            [(ngModel)]="currentFeature.desc"
+            name="desc"
+            rows="2"
+            placeholder="Mô tả thông điệp sản phẩm thiên nhiên, liệu trình nuôi dưỡng..."
+            class="banner-textarea"
+          ></textarea>
+        </div>
+
+        <!-- Gắn sản phẩm cho Banner -->
+        <div class="banner-prod-box">
+          <label class="banner-label" style="display: block; margin-bottom: 8px;">
+            Gắn Sản Phẩm Vào Chiến Dịch
+          </label>
+          
+          <div class="banner-prod-search">
+            <svg class="banner-prod-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              type="text"
+              placeholder="Lọc nhanh sản phẩm..."
+              (input)="onSearchChange($event)"
+            />
+          </div>
+
+          <div class="banner-prod-list custom-scrollbar">
+            <div
+              *ngFor="let prod of filteredProducts()"
+              (click)="toggleProductSelection(prod.id)"
+              class="banner-prod-item"
+              [class.selected]="isProductSelected(prod.id)"
+            >
+              <div class="flex items-center gap-2 overflow-hidden">
+                <img
+                  [src]="prod.imageUrl || '/images/placeholder-product.svg'"
+                  alt="Thumb"
+                  class="banner-prod-thumb"
+                />
+                <span class="banner-prod-name truncate">{{ prod.name }}</span>
+              </div>
+              <input
+                type="checkbox"
+                [checked]="isProductSelected(prod.id)"
+                (click)="$event.stopPropagation()"
+                (change)="toggleProductSelection(prod.id)"
+                class="banner-checkbox"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Ảnh bìa banner -->
+        <div class="banner-form-group">
+          <label class="banner-label">Hình ảnh banner</label>
+          <div class="banner-upload-zone" [class.has-img]="imagePreview">
+            <input
+              type="file"
+              (change)="onFileSelected($event)"
+              accept="image/*"
+              class="banner-file-input"
+            />
+            <div *ngIf="!imagePreview" class="banner-upload-prompt">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#8A9A7B" stroke-width="1.8" class="mb-1">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+              <p class="text-xs font-semibold text-ink">Bấm để tải ảnh banner lên</p>
+              <p class="text-[11px] text-ink-soft mt-0.5">Khuyến nghị tỉ lệ 16:9 hoặc 21:9 ngang</p>
+            </div>
+            <div *ngIf="imagePreview" class="banner-img-preview">
+              <img [src]="imagePreview" alt="Xem trước ảnh banner" />
+              <button
+                type="button"
+                (click)="imagePreview = null; currentFeature.imgUrl = ''"
+                class="banner-remove-img"
+                title="Gỡ ảnh"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Nút Submit -->
+        <button
+          type="submit"
+          [disabled]="isLoading || !currentFeature.name.trim()"
+          class="banner-submit-btn"
+        >
+          <span *ngIf="!isLoading">
+            {{ isEditing ? '✓ Lưu Thay Đổi Banner' : '+ Tạo Mới Chiến Dịch' }}
+          </span>
+          <span *ngIf="isLoading" class="flex items-center justify-center gap-2">
+            <svg class="animate-spin text-sm" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
+              <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path>
+            </svg>
+            <span>Đang lưu...</span>
+          </span>
+        </button>
+      </form>
+    </div>
+
+    <!-- ── CỘT PHẢI: DANH SÁCH BANNER ── -->
+    <div class="banner-list-card">
+      <h2 class="banner-list-title">Danh Sách Banner & Chiến Dịch ({{ allFeatures().length }})</h2>
+
+      <div class="banner-cards-grid">
+        <div
+          *ngFor="let feat of allFeatures()"
+          (click)="onEdit(feat)"
+          class="banner-item-card"
+          [class.is-active-edit]="isEditing && currentFeature.id === feat.id"
+        >
+          <div class="banner-item-thumb">
+            <img
+              *ngIf="feat.imgUrl"
+              [src]="feat.imgUrl"
+              [alt]="feat.name"
+            />
+            <div *ngIf="!feat.imgUrl" class="w-full h-full flex items-center justify-center text-xs text-ink-soft">
+              Chưa có ảnh
+            </div>
+            <span *ngIf="feat.isBanner" class="banner-home-badge">
+              Trang Chủ
+            </span>
+          </div>
+
+          <div class="banner-item-body">
+            <div class="banner-item-header">
+              <h3 class="banner-item-name">{{ feat.name }}</h3>
+              <button
+                (click)="onDelete(feat.id); $event.stopPropagation()"
+                type="button"
+                class="banner-delete-btn"
+                title="Xóa banner"
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  <line x1="10" y1="11" x2="10" y2="17"></line>
+                  <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+              </button>
+            </div>
+
+            <p class="banner-item-desc">{{ feat.desc || 'Chưa có mô tả...' }}</p>
+
+            <div class="banner-item-prods">
+              <span class="text-[10px] font-bold text-ink-soft uppercase mr-1">Sản phẩm gắn:</span>
+              <span *ngFor="let p of feat.products" class="banner-item-prod-tag">
+                {{ p.name }}
+              </span>
+              <span *ngIf="!feat.products?.length" class="text-[10px] text-zinc-400 italic">
+                Chưa gán sản phẩm
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="allFeatures().length === 0" class="banner-empty-state">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#C4B8AA" stroke-width="1.5" class="mx-auto mb-3">
+            <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+          <h4 class="font-bold text-ink">Chưa có banner nào</h4>
+          <p class="text-xs text-ink-soft mt-1">
+            Hãy tạo banner đầu tiên bằng form bên trái để làm nổi bật dòng sản phẩm ELORIA.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,257 @@
+/* ══════════════════════════════════════════════════════════════
+   ELORIA — FOOTER
+   ══════════════════════════════════════════════════════════════ */
+
+.eloria-footer {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 64px 0 32px;
+}
+
+.eloria-footer__inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (min-width: 768px) {
+  .eloria-footer__inner { padding: 0 48px; }
+}
+
+/* ── Grid bố cục ── */
+.eloria-footer__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px 48px;
+  padding-bottom: 48px;
+  border-bottom: 1px solid rgba(246, 239, 230, 0.12);
+}
+
+@media (min-width: 640px) {
+  .eloria-footer__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .eloria-footer__grid {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+  }
+}
+
+/* ── Brand column ── */
+.eloria-footer__brand {}
+
+.eloria-footer__logo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.eloria-footer__logo-name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  color: var(--bg);
+}
+
+.eloria-footer__logo-tag {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(246, 239, 230, 0.55);
+}
+
+.eloria-footer__desc {
+  font-size: 13px;
+  color: rgba(246, 239, 230, 0.65);
+  line-height: 1.7;
+  max-width: 280px;
+  margin-bottom: 24px;
+}
+
+/* Mạng xã hội */
+.eloria-footer__socials {
+  display: flex;
+  gap: 10px;
+}
+
+.eloria-footer__social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(246, 239, 230, 0.08);
+  color: rgba(246, 239, 230, 0.7);
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.eloria-footer__social-btn:hover {
+  background: var(--sage);
+  color: var(--surface);
+}
+
+/* ── Link columns ── */
+.eloria-footer__col-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(246, 239, 230, 0.45);
+  margin-bottom: 16px;
+}
+
+.eloria-footer__links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.eloria-footer__link {
+  font-size: 14px;
+  color: rgba(246, 239, 230, 0.70);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.eloria-footer__link:hover { color: var(--bg); }
+
+/* ── Newsletter ── */
+.eloria-newsletter {
+  background: rgba(246, 239, 230, 0.05);
+  border: 1px solid rgba(246, 239, 230, 0.12);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 40px 0;
+}
+
+.eloria-newsletter__title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--bg);
+  margin-bottom: 6px;
+}
+
+.eloria-newsletter__sub {
+  font-size: 13px;
+  color: rgba(246, 239, 230, 0.55);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+/* TODO: thay text ưu đãi bằng nội dung thật */
+
+.eloria-newsletter__form {
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+}
+
+@media (min-width: 480px) {
+  .eloria-newsletter__form { flex-direction: row; }
+}
+
+.eloria-newsletter__input {
+  flex: 1;
+  padding: 11px 16px;
+  border: 1px solid rgba(246, 239, 230, 0.20);
+  border-radius: 999px;
+  background: rgba(246, 239, 230, 0.08);
+  color: var(--bg);
+  font-size: 13px;
+  font-family: var(--font-sans);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.eloria-newsletter__input::placeholder { color: rgba(246, 239, 230, 0.35); }
+.eloria-newsletter__input:focus { border-color: var(--sage); }
+
+.eloria-newsletter__btn {
+  padding: 11px 22px;
+  background: var(--sage);
+  color: var(--surface);
+  border: none;
+  border-radius: 999px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.eloria-newsletter__btn:hover { background: var(--sage-deep); }
+
+/* ── Bottom bar ── */
+.eloria-footer__bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding-top: 28px;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .eloria-footer__bottom {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+}
+
+.eloria-footer__copyright {
+  font-size: 12px;
+  color: rgba(246, 239, 230, 0.35);
+}
+
+.eloria-footer__policies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+}
+
+.eloria-footer__policy {
+  font-size: 12px;
+  color: rgba(246, 239, 230, 0.45);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.eloria-footer__policy:hover { color: var(--bg); }
+
+/* ── Phương thức thanh toán ── */
+.eloria-footer__payments {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.eloria-payment-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; height: 26px;
+  background: rgba(246, 239, 230, 0.08);
+  border: 1px solid rgba(246, 239, 230, 0.12);
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(246, 239, 230, 0.6);
+  letter-spacing: 0.04em;
+}

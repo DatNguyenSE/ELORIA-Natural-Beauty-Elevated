@@ -1,0 +1,296 @@
+<!-- ═══════════════════════════════════════════════════
+     ELORIA — TRANG CHI TIẾT SẢN PHẨM
+     ═══════════════════════════════════════════════════ -->
+
+<div class="pd-root">
+
+  <!-- ── BREADCRUMB ── -->
+  <nav class="pd-breadcrumb" aria-label="Điều hướng">
+    <a routerLink="/" class="pd-breadcrumb__link">Trang chủ</a>
+    <span class="pd-breadcrumb__sep">/</span>
+    <a routerLink="/category/products" class="pd-breadcrumb__link">Sản phẩm</a>
+    <span class="pd-breadcrumb__sep">/</span>
+    <span class="pd-breadcrumb__current">{{ product()?.name }}</span>
+  </nav>
+
+  <!-- ── MOBILE: Tên sản phẩm hiện trên ảnh ── -->
+  <div class="pd-mobile-header">
+    <div class="pd-mobile-header__meta">
+      <span class="pd-mobile-header__brand">ELORIA</span>
+      @if (product()?.label) {
+        <span class="pd-mobile-header__tag">{{ product()?.label }}</span>
+      }
+    </div>
+    <h1 class="pd-mobile-header__name">{{ product()?.name }}</h1>
+  </div>
+
+  <!-- ── MAIN GRID ── -->
+  <div class="pd-grid">
+
+    <!-- ══ CỘT TRÁI: ẢNH ══ -->
+    <div class="pd-col-image">
+
+      <div class="pd-image-hero group">
+
+        <!-- Badges -->
+        <div class="pd-badges">
+          @if (product()?.discount && product()?.discount! > 0) {
+            <span class="pd-badge pd-badge--sale">-{{ product()?.discount }}%</span>
+          }
+          @if (product()?.isNew) {
+            <span class="pd-badge pd-badge--new">Hàng mới</span>
+          }
+        </div>
+
+        <!-- Rating pill -->
+        <div class="pd-rating-pill" aria-label="Đánh giá sản phẩm">
+          <span class="pd-rating-pill__star" aria-hidden="true">★</span>
+          <span class="pd-rating-pill__text">4.9 &nbsp;|&nbsp; 2.5K đánh giá</span>
+        </div>
+
+        <div class="pd-image-hero__wrap">
+          <img [src]="product()?.imageUrl || '/images/placeholder-product.svg'"
+               class="pd-image-hero__img"
+               [alt]="product()?.name || 'Sản phẩm ELORIA'"
+               loading="lazy">
+        </div>
+      </div>
+
+      <!-- ── DESCRIPTION ACCORDION ── -->
+      <div class="pd-accordion">
+        <button (click)="toggleDescription()" class="pd-accordion__trigger"
+                [attr.aria-expanded]="isDescriptionOpen()">
+          <span class="pd-accordion__label">Thông tin sản phẩm</span>
+          <span class="material-symbols-outlined pd-accordion__icon"
+                [class.pd-accordion__icon--open]="isDescriptionOpen()"
+                aria-hidden="true">expand_more</span>
+        </button>
+        <div class="pd-accordion__body"
+             [class.pd-accordion__body--open]="isDescriptionOpen()">
+          <div class="pd-accordion__inner">
+            <p class="pd-accordion__desc">{{ product()?.description || 'Đang cập nhật mô tả sản phẩm...' }}</p>
+            <div class="pd-specs">
+              <div class="pd-spec-row">
+                <span class="pd-spec-row__key">Thương hiệu</span>
+                <span class="pd-spec-row__val">ELORIA</span>
+              </div>
+              <div class="pd-spec-row">
+                <span class="pd-spec-row__key">Xuất xứ</span>
+                <span class="pd-spec-row__val">Việt Nam</span>
+              </div>
+              <div class="pd-spec-row">
+                <span class="pd-spec-row__key">Thành phần chính</span>
+                <span class="pd-spec-row__val">Chiết xuất thiên nhiên, không paraben, không sulfate</span>
+              </div>
+              <div class="pd-spec-row">
+                <span class="pd-spec-row__key">Mã sản phẩm</span>
+                <span class="pd-spec-row__val">#EL-{{ product()?.id }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /pd-col-image -->
+
+    <!-- ══ CỘT PHẢI: THÔNG TIN ══ -->
+    <div class="pd-col-info">
+      <div class="pd-sticky">
+
+        <!-- Thương hiệu + label (desktop) -->
+        <div class="pd-meta-row">
+          <span class="pd-brand">ELORIA</span>
+          @if (product()?.label) {
+            <span class="pd-label-tag">{{ product()?.label }}</span>
+          }
+        </div>
+
+        <!-- Tên sản phẩm (desktop) -->
+        <h1 class="pd-name">{{ product()?.name }}</h1>
+
+        <!-- Giá -->
+        <div class="pd-price-block">
+          <span class="pd-price-current">
+            {{ (product()?.price! * (1 - (product()?.discount ?? 0) / 100)) | number:'1.0-0' }}đ
+          </span>
+          @if (product()?.discount && product()?.discount! > 0) {
+            <span class="pd-price-old">{{ product()?.price | number:'1.0-0' }}đ</span>
+            <span class="pd-price-save">
+              Tiết kiệm {{ (product()?.price! * (product()?.discount! / 100)) | number:'1.0-0' }}đ
+            </span>
+          }
+        </div>
+
+        <!-- Member banner -->
+        <div class="pd-member-banner">
+          <div>
+            <p class="pd-member-banner__eyebrow">Đặc quyền hội viên</p>
+            <p class="pd-member-banner__text">Giảm thêm 10% &amp; Miễn phí giao hàng</p>
+          </div>
+          <button class="pd-member-banner__btn">Đăng ký</button>
+        </div>
+
+        <!-- Lợi ích sản phẩm (icon grid) -->
+        @if (product()?.features && product()?.features!.length > 0) {
+        <div class="pd-benefits">
+          @for (f of product()?.features; track f.id) {
+            <div class="pd-benefit-item">
+              <div class="pd-benefit-item__icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                  <path d="M12 2C6 6 5 14 12 22C19 14 18 6 12 2Z" fill="rgba(138,154,123,0.2)" stroke="var(--sage)"/>
+                </svg>
+              </div>
+              <span>{{ f.name }}</span>
+            </div>
+          }
+        </div>
+        }
+
+        <!-- Dung tích sản phẩm -->
+        <div class="pd-sizes">
+          <div class="pd-sizes__header">
+            <span class="pd-sizes__title">Quy cách &amp; Dung tích</span>
+          </div>
+          @if (product()?.productSizes && product()?.productSizes!.length > 1) {
+            <div class="pd-size-grid">
+              @for (s of product()?.productSizes; track s.id) {
+                <button
+                  (click)="s.quantity > 0 ? selectSize(s.sizeName) : null"
+                  [disabled]="s.quantity <= 0"
+                  class="pd-size-btn"
+                  [class.pd-size-btn--active]="selectedSize() === s.sizeName"
+                  [class.pd-size-btn--oos]="s.quantity <= 0"
+                  [attr.aria-label]="s.sizeName + (s.quantity <= 0 ? ' — hết hàng' : '')"
+                  [attr.aria-pressed]="selectedSize() === s.sizeName">
+                  {{ s.sizeName }}
+                  @if (s.quantity <= 0) {
+                    <div class="pd-size-btn__slash"></div>
+                  }
+                </button>
+              }
+            </div>
+          } @else {
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[rgba(138,154,123,0.12)] text-sage-deep text-xs font-semibold">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <span>Dung tích: {{ product()?.volume || selectedSize() || 'Tiêu chuẩn' }}</span>
+            </div>
+          }
+        </div>
+
+        <!-- Số lượng + tồn kho -->
+        <div class="pd-qty-row">
+          <div class="pd-qty" role="group" aria-label="Số lượng">
+            <button (click)="updateQuantity(-1)" class="pd-qty__btn" aria-label="Giảm số lượng">−</button>
+            <span class="pd-qty__val" aria-live="polite">{{ quantity() }}</span>
+            <button (click)="updateQuantity(1)" class="pd-qty__btn" aria-label="Tăng số lượng">+</button>
+          </div>
+          <div class="pd-stock" aria-live="polite">
+            <span class="pd-stock__dot"
+                  [class.pd-stock__dot--in]="stockForSelectedSize() > 0"></span>
+            <span class="pd-stock__text">
+              @if (stockForSelectedSize() > 0) {
+                Còn {{ stockForSelectedSize() }} sản phẩm
+              } @else {
+                Hết hàng
+              }
+            </span>
+          </div>
+        </div>
+
+        <!-- CTA buttons -->
+        <div class="pd-ctas">
+          <button (click)="addToCart()" [disabled]="stockForSelectedSize() <= 0" class="pd-cta pd-cta--primary">
+            <span>{{ stockForSelectedSize() > 0 ? 'THÊM VÀO GIỎ HÀNG' : 'HẾT HÀNG' }}</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+          </button>
+          <button (click)="toggleFavorite()" class="pd-cta pd-cta--secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            <span>YÊU THÍCH</span>
+          </button>
+        </div>
+
+        <!-- Trust badges -->
+        <div class="pd-trust">
+          <div class="pd-trust__item">
+            <svg class="pd-trust__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+            </svg>
+            <span class="pd-trust__text">Giao nhanh toàn quốc</span>
+          </div>
+          <div class="pd-trust__item">
+            <svg class="pd-trust__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <span class="pd-trust__text">Chính hãng 100%</span>
+          </div>
+          <div class="pd-trust__item">
+            <svg class="pd-trust__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+            </svg>
+            <span class="pd-trust__text">Đổi trả 30 ngày</span>
+          </div>
+        </div>
+
+        <!-- Upsell: gợi ý combo -->
+        <div class="pd-upsell">
+          <p class="pd-upsell__title">Mua kèm tiết kiệm hơn</p>
+          <p class="pd-upsell__text">
+            Sản phẩm này có trong các combo ELORIA — tiết kiệm đến 196.000đ khi mua trọn bộ.
+          </p>
+          <button class="pd-upsell__btn" routerLink="/" [queryParams]="{section: 'combos'}">
+            Xem combo phù hợp →
+          </button>
+        </div>
+
+      </div><!-- /pd-sticky -->
+    </div><!-- /pd-col-info -->
+
+  </div><!-- /pd-grid -->
+
+  <!-- ── SẢN PHẨM CÓ THỂ BẠN THÍCH ── -->
+  <section class="pd-related" aria-labelledby="related-heading">
+    <div class="pd-related__header">
+      <h2 class="pd-related__title" id="related-heading">Có thể bạn cũng thích</h2>
+      <div class="pd-related__line"></div>
+    </div>
+    <div class="pd-related-track no-scrollbar">
+      @for (pr of productRefer(); track pr.id) {
+        @if (product()?.id !== pr.id) {
+          <div class="pd-rcard" [routerLink]="['/product-detail', pr.id]"
+               [attr.aria-label]="pr.name">
+            <div class="pd-rcard__img-wrap">
+              <img [src]="pr.imageUrl" class="pd-rcard__img" [alt]="pr.name"
+                   loading="lazy" width="200" height="267">
+              @if (pr.discount && pr.discount > 0) {
+                <span class="pd-rcard__badge pd-rcard__badge--sale">-{{ pr.discount }}%</span>
+              }
+              @if (pr.isNew) {
+                <span class="pd-rcard__badge pd-rcard__badge--new"
+                      [style.top]="(pr.discount && pr.discount > 0) ? '32px' : '10px'">Mới</span>
+              }
+              <div class="pd-rcard__price-chip">
+                {{ (pr.price * (1 - (pr.discount ?? 0) / 100)) | number:'1.0-0' }}đ
+              </div>
+            </div>
+            <div class="pd-rcard__info">
+              <p class="pd-rcard__brand">ELORIA</p>
+              <h3 class="pd-rcard__name">{{ pr.name }}</h3>
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </section>
+
+</div><!-- /pd-root -->

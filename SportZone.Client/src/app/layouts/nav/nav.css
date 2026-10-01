@@ -1,0 +1,465 @@
+/* ══════════════════════════════════════════════════════════════
+   ELORIA — NAVIGATION HEADER
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── ANNOUNCEMENT BAR ── */
+.eloria-ann-bar {
+  background: var(--sage-deep);
+  color: var(--bg);
+  text-align: center;
+  padding: 10px 16px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 50;
+}
+
+@media (min-width: 768px) {
+  .eloria-ann-bar { font-size: 12px; }
+}
+
+/* ── HEADER ── */
+.eloria-header {
+  position: sticky;
+  padding-bottom: 5px;
+  top: 0;
+  z-index: 40;
+  width: 100%;
+  background: rgba(246, 239, 230, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.eloria-header.scrolled {
+  background: rgba(246, 239, 230, 0.96);
+  box-shadow: 0 4px 24px rgba(47, 42, 36, 0.08);
+}
+
+.eloria-header__inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 20px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+@media (min-width: 1024px) {
+  .eloria-header__inner { padding: 0 48px; }
+}
+
+/* ── LOGO ── */
+.eloria-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-decoration: none;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.eloria-logo:hover { opacity: 0.82; }
+
+.eloria-logo__icon {
+  width: 28px;
+  height: 28px;
+}
+
+.eloria-logo__name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  color: var(--ink);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.eloria-logo__tag {
+  font-family: var(--font-sans);
+  font-size: 7px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+/* ── NAV DESKTOP ── */
+.eloria-nav {
+  display: none;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  gap: 28px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 1024px) {
+  .eloria-nav { display: flex; align-items: center; }
+}
+
+.eloria-nav__link {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  padding: 4px 0;
+  border-bottom: 1.5px solid transparent;
+  transition: border-color 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.eloria-nav__link:hover,
+.eloria-nav__link.active {
+  border-bottom-color: var(--sage);
+  color: var(--sage-deep);
+}
+
+/* ── ACTIONS (tìm kiếm, tài khoản, giỏ) ── */
+.eloria-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.eloria-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--ink);
+  transition: background 0.2s;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.eloria-action-btn:hover {
+  background: var(--bg-soft);
+}
+
+/* Badge số lượng giỏ */
+.eloria-cart-badge {
+  position: absolute;
+  top: 4px; right: 4px;
+  min-width: 16px; height: 16px;
+  padding: 0 4px;
+  background: var(--sage-deep);
+  color: var(--bg);
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* ── SEARCH INPUT ── */
+.eloria-search-wrap {
+  position: relative;
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .eloria-search-wrap { display: block; }
+}
+
+.eloria-search {
+  width: 180px;
+  padding: 8px 36px 8px 14px;
+  background: var(--bg-soft);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s, width 0.3s, background 0.2s;
+}
+
+.eloria-search:focus {
+  border-color: var(--sage);
+  background: var(--surface);
+  width: 220px;
+}
+
+.eloria-search::placeholder { color: var(--ink-soft); }
+
+.eloria-search-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-soft);
+  pointer-events: none;
+}
+
+/* ── SEARCH DROPDOWN ── */
+.eloria-search-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 320px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  z-index: 200;
+}
+
+.eloria-search-header {
+  padding: 10px 14px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--line);
+}
+
+.eloria-search-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.eloria-search-item:hover { background: var(--bg-soft); }
+
+.eloria-search-item__img {
+  width: 44px; height: 44px;
+  object-fit: cover;
+  border-radius: 10px;
+  background: var(--bg-soft);
+  flex-shrink: 0;
+}
+
+.eloria-search-item__name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.eloria-search-item__price {
+  font-size: 12px;
+  color: var(--sage-deep);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* ── HAMBURGER (mobile) ── */
+.eloria-hamburger {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 8px;
+  border: none;
+  background: transparent;
+}
+
+@media (min-width: 1024px) { .eloria-hamburger { display: none; } }
+
+.eloria-hamburger__bar {
+  width: 22px;
+  height: 1.5px;
+  background: var(--ink);
+  transition: transform 0.3s, opacity 0.3s;
+}
+
+/* ── MOBILE DRAWER ── */
+.eloria-mobile-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.eloria-mobile-drawer.open {
+  pointer-events: all;
+}
+
+.eloria-mobile-drawer__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(47, 42, 36, 0.4);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.eloria-mobile-drawer.open .eloria-mobile-drawer__backdrop {
+  opacity: 1;
+}
+
+.eloria-mobile-drawer__panel {
+  position: absolute;
+  top: 0; right: 0;
+  width: min(320px, 85vw);
+  height: 100%;
+  background: var(--surface);
+  transform: translateX(100%);
+  transition: transform 0.35s ease-out;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 24px 40px;
+  gap: 32px;
+}
+
+.eloria-mobile-drawer.open .eloria-mobile-drawer__panel {
+  transform: translateX(0);
+}
+
+.eloria-mobile-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+  padding: 0; margin: 0;
+}
+
+.eloria-mobile-nav__link {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink);
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.eloria-mobile-nav__link:hover { color: var(--sage-deep); }
+
+/* ── LOGIN MODAL ── */
+.eloria-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(47, 42, 36, 0.35);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.eloria-modal {
+  background: var(--surface);
+  width: 100%;
+  max-width: 460px;
+  border-radius: 24px;
+  padding: 32px;
+  position: relative;
+  box-shadow: var(--shadow-soft);
+  animation: eloria-fade-up 0.35s ease-out both;
+}
+
+.eloria-modal__close {
+  position: absolute;
+  top: 16px; right: 16px;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--bg-soft);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--ink);
+  transition: background 0.2s;
+}
+
+.eloria-modal__close:hover { background: var(--bg); }
+
+.eloria-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  background: var(--bg);
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.eloria-input:focus { border-color: var(--sage); }
+.eloria-input.error { border-color: #c0392b; }
+.eloria-input::placeholder { color: var(--ink-soft); }
+
+.eloria-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 24px;
+  background: var(--sage);
+  color: var(--surface);
+  border: none;
+  border-radius: var(--radius-btn);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.25s, transform 0.15s;
+  white-space: nowrap;
+}
+
+.eloria-btn-primary:hover { background: var(--sage-deep); }
+.eloria-btn-primary:active { transform: scale(0.98); }
+.eloria-btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.eloria-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-btn);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.eloria-btn-outline:hover {
+  border-color: var(--sage);
+  background: var(--bg-soft);
+}

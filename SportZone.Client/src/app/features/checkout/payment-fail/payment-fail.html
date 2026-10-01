@@ -1,0 +1,38 @@
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Be+Vietnam+Pro:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<div class="fail-root">
+  <div class="fail-card">
+    <div class="fail-icon-wrap">
+      <svg class="fail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </div>
+
+    <div class="fail-tag">
+      <span>ELORIA APOTHECARY</span>
+    </div>
+
+    <h1 class="fail-title">Chưa Thể Hoàn Tất Thanh Toán</h1>
+
+    <div class="fail-desc">
+      <p>Rất tiếc, giao dịch qua cổng thanh toán không thành công hoặc đã bị gián đoạn.</p>
+      @if (orderId()) {
+        <p class="fail-order-code">Mã đơn hàng: <strong>#{{ orderId() }}</strong></p>
+      }
+    </div>
+
+    <div class="fail-actions">
+      <a class="fail-btn fail-btn--primary" [routerLink]="['/order-detail', orderId()]">
+        Thanh toán lại đơn hàng
+      </a>
+
+      <a class="fail-btn fail-btn--outline" routerLink="/">
+        Về trang chủ
+      </a>
+    </div>
+
+    <p class="fail-support">
+      Nếu tài khoản ngân hàng của bạn đã bị trừ tiền, xin đừng lo lắng. Hãy liên hệ hỗ trợ tại <a href="mailto:support@eloria.vn">support@eloria.vn</a> để được đối soát ngay lập tức.
+    </p>
+  </div>
+</div>

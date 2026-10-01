@@ -1,0 +1,356 @@
+/* ══════════════════════════════════════════════════════════════
+   ELORIA ADMIN — QUẢN LÝ THÀNH VIÊN & KHÁCH HÀNG
+   ══════════════════════════════════════════════════════════════ */
+
+.member-admin-root {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  font-family: var(--font-sans, 'Be Vietnam Pro', sans-serif);
+}
+
+/* Page Header */
+.member-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: var(--surface, #FBF7F1);
+  border: 1px solid var(--line, rgba(47, 42, 36, 0.12));
+  border-radius: 16px;
+  padding: 24px 28px;
+}
+
+.member-header__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sage-deep, #5F6F52);
+  margin-bottom: 6px;
+}
+
+.member-header__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--sage, #8A9A7B);
+}
+
+.member-header__title {
+  font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 600;
+  color: var(--ink, #2F2A24);
+  line-height: 1.2;
+}
+
+.member-header__subtitle {
+  font-size: 13px;
+  color: var(--ink-soft, #6B6259);
+  margin-top: 4px;
+}
+
+.member-header__count {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  background: var(--bg, #F6EFE6);
+  border: 1px solid var(--line, rgba(47, 42, 36, 0.12));
+  border-radius: 12px;
+  padding: 12px 20px;
+}
+
+.member-header__count-num {
+  font-family: var(--font-serif, 'Cormorant Garamond', serif);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ink, #2F2A24);
+  line-height: 1;
+}
+
+.member-header__count-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-soft, #6B6259);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+}
+
+/* Members Grid */
+.member-grid-card {
+  background: var(--surface, #FBF7F1);
+  border: 1px solid var(--line, rgba(47, 42, 36, 0.12));
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(47, 42, 36, 0.04);
+}
+
+.member-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.member-card {
+  background: var(--bg, #F6EFE6);
+  border: 1px solid var(--line, rgba(47, 42, 36, 0.12));
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.member-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--sage, #8A9A7B);
+  box-shadow: 0 4px 16px rgba(47, 42, 36, 0.08);
+}
+
+.member-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  object-fit: cover;
+  background: var(--surface, #FBF7F1);
+  border: 1.5px solid var(--sage, #8A9A7B);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--sage-deep, #5F6F52);
+  flex-shrink: 0;
+}
+
+.member-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  object-fit: cover;
+}
+
+.member-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.member-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink, #2F2A24);
+  margin: 0;
+}
+
+.member-email {
+  font-size: 12px;
+  color: var(--ink-soft, #6B6259);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.member-empty {
+  text-align: center;
+  padding: 48px 16px;
+  color: var(--ink-soft, #6B6259);
+}
+
+/* ── MODAL CHI TIẾT THÀNH VIÊN ── */
+.detail-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(31, 38, 30, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.detail-content {
+  background: var(--surface, #FBF7F1);
+  border: 1px solid var(--line, rgba(47, 42, 36, 0.15));
+  border-radius: 20px;
+  width: 100%;
+  max-width: 800px;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-header {
+  padding: 24px 28px;
+  border-bottom: 1px solid var(--line, rgba(47, 42, 36, 0.1));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.detail-title {
+  font-family: var(--font-serif, 'Cormorant Garamond', Georgia, serif);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink, #2F2A24);
+}
+
+.close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid var(--line, rgba(47, 42, 36, 0.12));
+  background: var(--bg, #F6EFE6);
+  color: var(--ink, #2F2A24);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  background: #fee2e2;
+  color: #ef4444;
+  border-color: #fca5a5;
+}
+
+.detail-body {
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.personal-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  background: var(--bg, #F6EFE6);
+  border: 1px solid var(--line, rgba(47, 42, 36, 0.1));
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+
+.info-item-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft, #6B6259);
+}
+
+.info-item-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink, #2F2A24);
+  margin-top: 4px;
+}
+
+.order-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink, #2F2A24);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.order-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+.order-table th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--ink-soft, #6B6259);
+  background: var(--bg, #F6EFE6);
+  border-bottom: 1px solid var(--line, rgba(47, 42, 36, 0.1));
+}
+
+.order-row {
+  cursor: pointer;
+  transition: background 0.15s;
+  border-bottom: 1px solid var(--line, rgba(47, 42, 36, 0.08));
+}
+
+.order-row:hover {
+  background: rgba(138, 154, 123, 0.08);
+}
+
+.order-row td {
+  padding: 12px 14px;
+}
+
+.status-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(138, 154, 123, 0.15);
+  color: var(--sage-deep, #5F6F52);
+}
+
+.order-items-box {
+  background: var(--bg, #F6EFE6);
+  padding: 14px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 8px 14px;
+}
+
+.order-item-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line, rgba(47, 42, 36, 0.08));
+}
+
+.order-item-thumb {
+  width: 40px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--line, rgba(47, 42, 36, 0.1));
+}
+
+.order-item-info {
+  flex: 1;
+}
+
+.order-item-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink, #2F2A24);
+}
+
+.order-item-meta {
+  font-size: 11px;
+  color: var(--ink-soft, #6B6259);
+  margin-top: 2px;
+}

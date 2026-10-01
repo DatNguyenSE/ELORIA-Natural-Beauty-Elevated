@@ -1,0 +1,151 @@
+<div class="el-admin-layout">
+  
+  <!-- ══ SIDEBAR ══ -->
+  <aside [class.collapsed]="isSidebarCollapsed()" class="el-sidebar">
+    
+    <!-- Brand Header -->
+    <div class="el-sidebar__header">
+      <a routerLink="/" class="el-sidebar__brand" title="Xem trang chủ ELORIA">
+        <div class="el-sidebar__logo-icon">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="15" stroke="#8A9A7B" stroke-width="1.5" fill="none"/>
+            <path d="M16 6C11 10 9.5 17 16 26C22.5 17 21 10 16 6Z" fill="#8A9A7B" opacity="0.85"/>
+            <path d="M16 6L16 26" stroke="#5F6F52" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div *ngIf="!isSidebarCollapsed()" class="el-sidebar__brand-text">
+          <span class="el-sidebar__brand-name">ELORIA</span>
+          <span class="el-sidebar__brand-badge">ADMIN PORTAL</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav class="el-sidebar__nav">
+      <div *ngIf="!isSidebarCollapsed()" class="el-sidebar__section-title">QUẢN LÝ CỬA HÀNG</div>
+      
+      @for (item of menuItems; track item.label) {
+        <a [routerLink]="item.link" routerLinkActive="active" class="el-sidebar__link" [title]="item.label">
+          <span class="el-sidebar__link-icon">
+            @switch (item.icon) {
+              @case ('inventory_2') {
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+              }
+              @case ('category') {
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+                  <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+                  <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+                  <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+                </svg>
+              }
+              @case ('group') {
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              }
+              @case ('view_carousel') {
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+              }
+              @default {
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                </svg>
+              }
+            }
+          </span>
+          <span *ngIf="!isSidebarCollapsed()" class="el-sidebar__link-label">{{item.label}}</span>
+        </a>
+      }
+
+      <div *ngIf="!isSidebarCollapsed()" class="el-sidebar__section-title mt-6">HỆ THỐNG</div>
+      <a routerLink="/" target="_blank" class="el-sidebar__link" title="Xem Cửa Hàng">
+        <span class="el-sidebar__link-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+        </span>
+        <span *ngIf="!isSidebarCollapsed()" class="el-sidebar__link-label">Xem Cửa Hàng</span>
+        <span *ngIf="!isSidebarCollapsed()" class="el-sidebar__ext-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </span>
+      </a>
+    </nav>
+
+    <!-- Logout -->
+    <div class="el-sidebar__footer">
+      <button (click)="logout()" class="el-sidebar__logout" title="Đăng xuất">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+        <span *ngIf="!isSidebarCollapsed()">Đăng xuất</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN WRAPPER ══ -->
+  <div class="el-main-wrapper">
+    
+    <!-- Top Header -->
+    <header class="el-topbar">
+      <div class="flex items-center gap-3">
+        <button (click)="toggleSidebar()" class="el-topbar__toggle" title="Thu gọn / Mở rộng menu">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="el-topbar__breadcrumb hidden md:flex items-center gap-2">
+          <span>Trang Quản Trị</span>
+          <span class="text-zinc-400">/</span>
+          <span class="text-sage-deep font-semibold">ELORIA Hair Care</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-5">
+        <a routerLink="/" class="el-topbar__store-btn hidden sm:inline-flex items-center gap-2">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          <span>Xem Website</span>
+        </a>
+
+        <div class="el-topbar__user">
+          <div class="el-topbar__avatar">EL</div>
+          <div class="el-topbar__user-info hidden sm:block">
+            <p class="el-topbar__user-name">{{ accountService.currentUser()?.email || 'Admin' }}</p>
+            <span class="el-topbar__user-role">Quản Trị Viên</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content Container -->
+    <main class="el-content-body custom-scrollbar">
+      <div class="el-content-container">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+    
+  </div>
+</div>

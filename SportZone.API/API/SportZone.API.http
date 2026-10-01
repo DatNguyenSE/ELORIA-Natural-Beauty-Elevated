@@ -1,0 +1,7 @@
+@SportZone.API_HostAddress = api
+
+
+GET {{SportZone.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

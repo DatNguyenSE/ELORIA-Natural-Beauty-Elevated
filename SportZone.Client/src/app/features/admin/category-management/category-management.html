@@ -1,0 +1,172 @@
+<div class="category-admin-root">
+  <!-- Page Header -->
+  <div class="category-header">
+    <div>
+      <div class="category-header__badge">
+        <span class="category-header__dot"></span>
+        <span>DANH MỤC SẢN PHẨM</span>
+      </div>
+      <h1 class="category-header__title">Quản Lý Thể Loại</h1>
+      <p class="category-header__subtitle">
+        Tạo mới, chỉnh sửa và quản lý các nhóm sản phẩm chăm sóc tóc ELORIA.
+      </p>
+    </div>
+    <div class="category-header__count">
+      <span class="category-header__count-num">{{ categories().length }}</span>
+      <span class="category-header__count-label">Thể loại hiện có</span>
+    </div>
+  </div>
+
+  <!-- Content Grid -->
+  <div class="category-grid">
+    <!-- CỘT TRÁI: FORM TẠO MỚI -->
+    <div class="category-form-card">
+      <div class="category-form-header">
+        <div class="category-form-header__icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </div>
+        <div>
+          <h2 class="category-form-header__title">Thêm Thể Loại Mới</h2>
+          <p class="category-form-header__desc">Điền thông tin để tạo thể loại mới</p>
+        </div>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" class="category-form">
+        <!-- Tên thể loại -->
+        <div class="category-form-group">
+          <label class="category-label">
+            Tên thể loại <span class="category-required">*</span>
+          </label>
+          <input
+            type="text"
+            [(ngModel)]="newCategory.categoryName"
+            name="categoryName"
+            required
+            placeholder="VD: Dầu gội, Combo Phục Hồi..."
+            class="category-input"
+          />
+        </div>
+
+        <!-- Mô tả -->
+        <div class="category-form-group">
+          <label class="category-label">Mô tả ngắn</label>
+          <textarea
+            [(ngModel)]="newCategory.description"
+            name="description"
+            rows="3"
+            placeholder="Mô tả công dụng hoặc đặc điểm chính của nhóm sản phẩm..."
+            class="category-textarea"
+          ></textarea>
+        </div>
+
+        <!-- Link ảnh minh họa -->
+        <div class="category-form-group">
+          <label class="category-label">Link ảnh minh họa (URL)</label>
+          <input
+            type="url"
+            [(ngModel)]="newCategory.imageUrl"
+            name="imageUrl"
+            placeholder="https://... (tùy chọn)"
+            class="category-input"
+          />
+          <div *ngIf="newCategory.imageUrl" class="category-img-preview">
+            <img [src]="newCategory.imageUrl" alt="Preview" (error)="newCategory.imageUrl = ''" />
+          </div>
+        </div>
+
+        <!-- Nút submit -->
+        <button
+          type="submit"
+          [disabled]="isSubmitting() || !newCategory.categoryName.trim()"
+          class="category-submit-btn"
+        >
+          <span *ngIf="!isSubmitting()">+ Thêm Thể Loại</span>
+          <span *ngIf="isSubmitting()">Đang lưu thể loại...</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- CỘT PHẢI: BẢNG DANH SÁCH -->
+    <div class="category-list-card">
+      <div class="category-list-topbar">
+        <h2 class="category-list-title">Danh Sách Thể Loại ({{ filteredCategories().length }})</h2>
+
+        <!-- Thanh tìm kiếm -->
+        <div class="category-search-wrap">
+          <svg class="category-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input
+            type="text"
+            [ngModel]="searchKeyword()"
+            (ngModelChange)="searchKeyword.set($event)"
+            placeholder="Tìm kiếm thể loại..."
+            class="category-search-input"
+          />
+        </div>
+      </div>
+
+      <!-- Bảng danh sách -->
+      <div class="category-table-wrapper">
+        <table class="category-table">
+          <thead>
+            <tr>
+              <th style="width: 60px;">ID</th>
+              <th>Tên Thể Loại</th>
+              <th>Mô Tả</th>
+              <th style="width: 100px; text-align: center;">Thao Tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let cat of filteredCategories()">
+              <td>
+                <span class="category-id-badge">#{{ cat.id }}</span>
+              </td>
+              <td>
+                <div class="category-name-cell">
+                  <div class="category-name-cell__avatar">
+                    {{ cat.categoryName.charAt(0) }}
+                  </div>
+                  <span class="category-name-cell__text">{{ cat.categoryName }}</span>
+                </div>
+              </td>
+              <td>
+                <span class="category-desc-cell">
+                  {{ cat.description || '—' }}
+                </span>
+              </td>
+              <td style="text-align: center;">
+                <button
+                  type="button"
+                  (click)="onDelete(cat)"
+                  class="category-delete-btn"
+                  title="Xóa thể loại"
+                  aria-label="Xóa thể loại"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+
+            <tr *ngIf="filteredCategories().length === 0">
+              <td colspan="4" class="category-empty-row">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--ink-soft)" stroke-width="1.5" style="margin: 0 auto 12px; opacity: 0.5;">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="8" y1="12" x2="16" y2="12"></line>
+                </svg>
+                <p>Không tìm thấy thể loại nào phù hợp.</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

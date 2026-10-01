@@ -1,0 +1,12 @@
+**/bin
+**/obj
+**/node_modules
+**/.git
+**/.vs
+**/.vscode
+**/appsettings.Development.json
+**/.env
+**/.env.*
+**/secrets.json
+**/*.pfx
+**/*.key

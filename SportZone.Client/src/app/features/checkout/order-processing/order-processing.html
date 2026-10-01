@@ -1,0 +1,309 @@
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+<div class="chk-root">
+
+  <!-- ══ TOP NAV / BREADCRUMB ══ -->
+  <header class="chk-header">
+    <div class="chk-header__inner">
+      <a routerLink="/cart" class="chk-back">
+        <svg class="chk-back__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
+        </svg>
+        <span>QUAY LẠI GIỎ HÀNG</span>
+      </a>
+
+      <div class="chk-greeting">
+        <span class="chk-greeting__lbl">Khách hàng:</span>
+        <strong class="chk-greeting__name">{{ accountService.currentUser()?.fullName || accountService.currentUser()?.userName }}</strong>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ MAIN CHECKOUT AREA ══ -->
+  <main class="chk-main">
+
+    <!-- Page Title Row -->
+    <div class="chk-title-row">
+      <div class="chk-title-block">
+        <div class="chk-tag">
+          <span class="chk-tag__leaf">🌿</span>
+          <span>ELORIA APOTHECARY · QUY TRÌNH THANH TOÁN</span>
+        </div>
+        <h1 class="chk-title">Hoàn Tất Đặt Hàng</h1>
+      </div>
+      <div class="chk-summary-pill">
+        <span>{{ totalItems }} sản phẩm</span>
+        <span class="chk-summary-pill__sep">•</span>
+        <strong class="chk-summary-pill__total">{{ finalTotal | number:'1.0-0' }}₫</strong>
+      </div>
+    </div>
+
+    <!-- Two Column Grid -->
+    <div class="chk-grid">
+
+      <!-- ── Left Column: Checkout Steps ── -->
+      <div class="chk-col-steps">
+
+        <!-- Step 1: Liên hệ -->
+        <section class="chk-step">
+          <div class="chk-step__header">
+            <span class="chk-step__num">1</span>
+            <h2 class="chk-step__title">Thông tin liên hệ</h2>
+          </div>
+
+          <div class="chk-card">
+            <div class="chk-field-ro">
+              <span class="chk-field-ro__label">Email tài khoản đặt hàng</span>
+              <p class="chk-field-ro__val">{{ profile()?.email }}</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Step 2: Địa chỉ giao hàng -->
+        <section class="chk-step">
+          <div class="chk-step__header">
+            <span class="chk-step__num">2</span>
+            <h2 class="chk-step__title">Địa chỉ nhận hàng</h2>
+          </div>
+
+          <div class="chk-card">
+            <div class="chk-form-grid">
+
+              <!-- Họ và tên -->
+              <div class="chk-field">
+                <label class="chk-field__label">Họ và tên người nhận</label>
+                <div class="chk-field__input-wrap">
+                  <input readonly type="text" [value]="profile()?.fullName"
+                         class="chk-input chk-input--readonly" />
+                  <svg *ngIf="profile()?.fullName" class="chk-field__check" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Địa chỉ -->
+              <div class="chk-field">
+                <label class="chk-field__label">Địa chỉ giao hàng</label>
+                <div class="chk-field__input-wrap">
+                  <input readonly type="text" [value]="profile()?.address"
+                         class="chk-input chk-input--readonly" />
+                  <svg *ngIf="profile()?.address" class="chk-field__check" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- SĐT & Postal Code -->
+              <div class="chk-form-row">
+                <div class="chk-field">
+                  <label class="chk-field__label">Số điện thoại liên hệ</label>
+                  <div class="chk-field__input-wrap">
+                    <input readonly type="tel" [value]="profile()?.phoneNumber"
+                           class="chk-input chk-input--readonly" />
+                  </div>
+                </div>
+
+                <div class="chk-field">
+                  <label class="chk-field__label">Mã bưu chính (Tùy chọn)</label>
+                  <div class="chk-field__input-wrap">
+                    <input id="postal" type="text" #postalInput placeholder="VD: 700000"
+                           class="chk-input" />
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Proceed to payment toggle button -->
+            <div class="chk-step-action" *ngIf="!isPaymentVisible">
+              <button (click)="showPaymentSection()" type="button" class="chk-btn chk-btn--next">
+                <span>Chọn phương thức thanh toán</span>
+                <svg class="chk-btn__icon" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Step 3: Phương thức thanh toán -->
+        <section id="payment-section" class="chk-step" *ngIf="isPaymentVisible">
+          <div class="chk-step__header">
+            <span class="chk-step__num">3</span>
+            <h2 class="chk-step__title">Phương thức thanh toán</h2>
+          </div>
+
+          <div class="chk-card">
+            <!-- SSL Security Note -->
+            <div class="chk-secure-note">
+              <svg class="chk-secure-note__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+              </svg>
+              <span>Giao dịch được bảo mật SSL 256-bit chuẩn thương mại điện tử quốc tế.</span>
+            </div>
+
+            <!-- Payment Options -->
+            <div class="chk-pay-options">
+
+              <!-- Option 2: Online Banking / VNPAY -->
+              <label class="chk-pay-opt" [class.chk-pay-opt--active]="selectedPaymentMethod === 2">
+                <div class="chk-pay-opt__left">
+                  <input type="radio" name="payment" [value]="2" [(ngModel)]="selectedPaymentMethod" class="chk-pay-radio" />
+                  <div class="chk-pay-opt__info">
+                    <span class="chk-pay-opt__name">Thanh toán Online (VNPAY / QR Code / Mobile Banking)</span>
+                    <span class="chk-pay-opt__sub">Quét mã QR tức thì, bảo mật và tiện lợi</span>
+                  </div>
+                </div>
+                <div class="chk-pay-opt__icons">
+                  <svg class="chk-pay-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.5M4.5 21V10.5m-3 0h21"/>
+                  </svg>
+                </div>
+              </label>
+
+              <!-- Option 3: Thẻ tín dụng -->
+              <label class="chk-pay-opt" [class.chk-pay-opt--active]="selectedPaymentMethod === 3">
+                <div class="chk-pay-opt__left">
+                  <input type="radio" name="payment" [value]="3" [(ngModel)]="selectedPaymentMethod" class="chk-pay-radio" />
+                  <div class="chk-pay-opt__info">
+                    <span class="chk-pay-opt__name">Thẻ quốc tế (Visa, MasterCard, JCB)</span>
+                    <span class="chk-pay-opt__sub">Xử lý thanh toán thẻ nhanh chóng</span>
+                  </div>
+                </div>
+                <div class="chk-pay-opt__icons">
+                  <svg class="chk-pay-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-6 3.75h16.5a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0020.25 4.5H3.75A2.25 2.25 0 001.5 6.75v10.5A2.25 2.25 0 003.75 21z"/>
+                  </svg>
+                </div>
+              </label>
+
+              <!-- Option 1: COD -->
+              <label class="chk-pay-opt" [class.chk-pay-opt--active]="selectedPaymentMethod === 1">
+                <div class="chk-pay-opt__left">
+                  <input type="radio" name="payment" [value]="1" [(ngModel)]="selectedPaymentMethod" class="chk-pay-radio" />
+                  <div class="chk-pay-opt__info">
+                    <span class="chk-pay-opt__name">Thanh toán khi nhận hàng (COD)</span>
+                    <span class="chk-pay-opt__sub">Nhận kiện hàng thảo mộc và thanh toán tiền mặt</span>
+                  </div>
+                </div>
+                <div class="chk-pay-opt__icons">
+                  <svg class="chk-pay-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6H2.25m0 0v1.5M2.25 7.5A.75.75 0 013 8.25h.75M3.75 8.25v7.5A.75.75 0 013 16.5H2.25m0 0v1.5M2.25 18A.75.75 0 013 18.75h.75m16.5-14.25v.75a.75.75 0 00.75.75h.75m0 0v1.5m0 0a.75.75 0 00-.75.75H20.25m0 0v7.5a.75.75 0 00.75.75h.75m0 0v1.5m0 0a.75.75 0 00-.75.75H20.25"/>
+                  </svg>
+                </div>
+              </label>
+
+            </div>
+
+            <!-- Complete Order Button -->
+            <button (click)="placeOrder()"
+                    [disabled]="!selectedPaymentMethod"
+                    type="button"
+                    class="chk-btn chk-btn--submit">
+              <span>HOÀN TẤT ĐẶT HÀNG</span>
+              <svg class="chk-btn__icon" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- ── Right Column: Order Summary ── -->
+      <div class="chk-col-summary">
+        <div class="chk-summary-card">
+
+          <div class="chk-summary-card__header">
+            <h3 class="chk-summary-card__title">Đơn hàng của bạn</h3>
+            <a routerLink="/cart" class="chk-summary-card__edit">Chỉnh sửa</a>
+          </div>
+
+          <!-- Items in Bag -->
+          <div class="chk-items-list">
+            @for (item of cartItems(); track item.productId) {
+              <div class="chk-item">
+                <div class="chk-item__thumb">
+                  <img [src]="item.product?.imageUrl || 'assets/images/default-product.png'"
+                       [alt]="item.product?.name"
+                       class="chk-item__img" />
+                </div>
+                <div class="chk-item__body">
+                  <h4 class="chk-item__name">{{ item.product?.name }}</h4>
+                  <div class="chk-item__meta">
+                    <span *ngIf="item.sizeName" class="chk-item__vol">Dung tích: {{ item.sizeName }}</span>
+                    <span class="chk-item__qty">SL: x{{ item.quantity }}</span>
+                  </div>
+                  <div class="chk-item__price-wrap">
+                    @if (item.product?.discount && item.product?.discount! > 0) {
+                      <span class="chk-item__old-price">{{ item.product?.price | currency:'VND':'':'1.0-0' }}₫</span>
+                    }
+                    <span class="chk-item__price">
+                      {{ (item.product?.price! * (1 - (item.product?.discount ?? 0)/100)) | currency:'VND':'':'1.0-0' }}₫
+                    </span>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- Voucher pill if applied -->
+          <div *ngIf="couponCode !== ''" class="chk-voucher">
+            <div class="chk-voucher__left">
+              <svg class="chk-voucher__icon" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+              </svg>
+              <span>Mã ưu đãi: <strong>{{ couponCode }}</strong></span>
+            </div>
+            <span class="chk-voucher__check">✓ Áp dụng</span>
+          </div>
+
+          <!-- Calculations -->
+          <div class="chk-calc">
+            <div class="chk-calc__row">
+              <span>Tạm tính tiền hàng</span>
+              <span>{{ subTotal | number:'1.0-0' }}₫</span>
+            </div>
+            <div class="chk-calc__row">
+              <span>Phí vận chuyển</span>
+              <span class="chk-calc__free">Miễn phí giao hàng</span>
+            </div>
+            <div *ngIf="discount > 0" class="chk-calc__row chk-calc__row--discount">
+              <span>Ưu đãi voucher</span>
+              <span>-{{ discount | number:'1.0-0' }}₫</span>
+            </div>
+
+            <div class="chk-calc__divider"></div>
+
+            <div class="chk-calc__total">
+              <div>
+                <span class="chk-calc__total-lbl">Tổng thanh toán</span>
+                <span class="chk-calc__vat">Đã gồm thuế GTGT</span>
+              </div>
+              <span class="chk-calc__total-val">{{ finalTotal | number:'1.0-0' }}₫</span>
+            </div>
+          </div>
+
+          <!-- Botanical Guarantees -->
+          <div class="chk-badges">
+            <div class="chk-badge-item">
+              <span class="chk-badge-item__icon">🌿</span>
+              <span>100% thảo mộc tự nhiên</span>
+            </div>
+            <div class="chk-badge-item">
+              <span class="chk-badge-item__icon">🚚</span>
+              <span>Giao hàng nhanh toàn quốc</span>
+            </div>
+            <div class="chk-badge-item">
+              <span class="chk-badge-item__icon">🔒</span>
+              <span>Thanh toán bảo mật an toàn</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</div>

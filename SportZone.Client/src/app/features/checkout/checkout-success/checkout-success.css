@@ -1,0 +1,70 @@
+/* Google Font: Inter & Material Symbols đã được tích hợp */
+
+:host {
+  display: block;
+  overflow-x: hidden;
+}
+
+/* Hiệu ứng đổ bóng cứng kiểu Neo-Brutalism */
+.neo-shadow {
+  box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 1);
+  transition: all 0.2s ease;
+}
+
+.neo-shadow:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 10px 10px 0px 0px rgba(0, 0, 0, 1);
+}
+
+/* Animation cho vòng tròn check */
+@keyframes check-bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.animate-check {
+  animation: check-bounce 2s infinite ease-in-out;
+}
+
+/* Custom các nút bấm */
+button {
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+/* Tạo nền sọc chéo tinh tế cho card (Vibe thể thao) */
+.bg-pattern {
+  background-image: radial-gradient(#000 0.5px, transparent 0.5px);
+  background-size: 10px 10px;
+  opacity: 0.05;
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+}
+
+/* Responsive cho Text */
+h1 {
+  text-shadow: 2px 2px 0px rgba(255, 255, 255, 1), 4px 4px 0px rgba(0, 0, 0, 0.1);
+}
+
+/* Badge trạng thái */
+.status-badge-active {
+  position: relative;
+}
+
+.status-badge-active::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 999px;
+  border: 1px solid #16a34a;
+  animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}

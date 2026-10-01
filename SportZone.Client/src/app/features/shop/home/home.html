@@ -1,0 +1,400 @@
+<!-- ══════════════════════════════════════════════════════════════
+     ELORIA — TRANG CHỦ
+     Thứ tự: Pending bar → Hero → Values → Products → Combos →
+             Need filter → Story → Steps → Reviews → FAQ → Newsletter
+     ══════════════════════════════════════════════════════════════ -->
+
+<!-- ── 0. PENDING ORDERS BAR ── -->
+@if (pendingOrdersCount() > 0) {
+<div class="el-pending-bar">
+  <span>
+    Bạn có <strong>{{ pendingOrdersCount() }} đơn hàng</strong> đang chờ thanh toán.
+  </span>
+  <a routerLink="/order-user" class="el-pending-bar__link">
+    Kiểm tra ngay →
+  </a>
+</div>
+}
+
+<!-- ══════════════════════════════════════════════════════════════
+     1. HERO
+     ══════════════════════════════════════════════════════════════ -->
+<section class="el-hero" aria-labelledby="hero-title">
+  <svg class="el-hero__wave" viewBox="0 0 1440 640" preserveAspectRatio="none" fill="none" aria-hidden="true">
+    <path d="M760 0H1440V115C1300 150 1270 45 1110 70C950 110 845 125 760 0Z" fill="#edf0e8"/>
+    <path d="M0 475C130 440 120 570 245 555C350 540 375 635 520 640H0Z" fill="#d7e3d7"/>
+    <path d="M0 550C65 505 145 615 220 640H0Z" fill="#bccfbb"/>
+    <path d="M240 640C210 555 330 543 359 640Z" fill="#efe4d6"/>
+  </svg>
+  <div class="el-hero__content">
+    <p class="el-hero__eyebrow">Chăm sóc tóc cùng ELORIA</p>
+    <h1 class="el-hero__h1" id="hero-title">Dịu dàng nuôi dưỡng.<br>Tự nhiên rạng rỡ.</h1>
+    <p class="el-hero__sub">Dành một chút dịu dàng cho mái tóc. Khám phá bộ chăm sóc tóc và da đầu lấy cảm hứng từ thiên nhiên.</p>
+    <div class="el-hero__btns">
+      <button type="button" (click)="goToCombos()" class="el-btn-sage">Khám phá bộ chăm sóc</button>
+      <button type="button" (click)="goToProducts()" class="el-btn-outline">Xem sản phẩm</button>
+    </div>
+  </div>
+  <div class="el-hero__products-side">
+    <img class="el-hero__art" src="eloria-botanical-hero.png" width="1536" height="1024"
+         fetchpriority="high" alt="Minh họa botanical với chai chăm sóc tóc, hũ kem, khăn mềm và lá xanh">
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     2. DẢI GIÁ TRỊ — 4 ô
+     ══════════════════════════════════════════════════════════════ -->
+<div class="el-values">
+  <div class="el-values__grid">
+
+    <div class="el-value-item reveal">
+      <svg class="el-value-item__icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <path d="M18 3 C10 8 8 20 18 33 C28 20 26 8 18 3Z" fill="rgba(138,154,123,0.15)" stroke="var(--sage)"/>
+        <path d="M18 3 L18 33" stroke="var(--sage-deep)" stroke-width="0.8" stroke-dasharray="3 2"/>
+      </svg>
+      <div>
+        <p class="el-value-item__text">Thành phần thiên nhiên</p>
+        <p class="el-value-item__sub">Chiết xuất lá & hoa tự nhiên</p>
+      </div>
+    </div>
+
+    <div class="el-value-item reveal" style="transition-delay:0.1s">
+      <svg class="el-value-item__icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <path d="M18 6 C12 10 10 18 18 28 C26 18 24 10 18 6Z" fill="rgba(185,169,207,0.15)" stroke="var(--lavender)"/>
+        <circle cx="18" cy="28" r="3" fill="rgba(185,169,207,0.4)" stroke="none"/>
+      </svg>
+      <div>
+        <p class="el-value-item__text">Dịu nhẹ cho da đầu</p>
+        <p class="el-value-item__sub">Phù hợp mọi loại tóc</p>
+      </div>
+    </div>
+
+    <div class="el-value-item reveal" style="transition-delay:0.2s">
+      <svg class="el-value-item__icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <circle cx="18" cy="18" r="10" stroke="var(--amber)"/>
+        <path d="M14 18 C14 14 22 12 22 18 C22 22 16 24 14 18Z" fill="rgba(217,164,65,0.2)" stroke="none"/>
+        <path d="M18 8 L18 5 M26 12 L28 10 M28 18 L31 18" stroke="var(--amber)" stroke-linecap="round" stroke-width="1.2"/>
+      </svg>
+      <div>
+        <p class="el-value-item__text">Hương thơm tinh tế</p>
+        <p class="el-value-item__sub">Thoang thoảng, không gắt</p>
+      </div>
+    </div>
+
+    <div class="el-value-item reveal" style="transition-delay:0.3s">
+      <svg class="el-value-item__icon" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <rect x="8" y="14" width="20" height="16" rx="3" stroke="var(--sage)"/>
+        <path d="M13 14 L13 10 C13 7.2 23 7.2 23 10 L23 14" stroke="var(--sage-deep)" stroke-linecap="round"/>
+        <path d="M8 20 L28 20" stroke="var(--sage)" stroke-width="0.8"/>
+        <circle cx="18" cy="23" r="2" fill="rgba(138,154,123,0.4)" stroke="none"/>
+      </svg>
+      <div>
+        <p class="el-value-item__text">Giao hàng nhanh</p>
+        <p class="el-value-item__sub">Miễn phí từ 500.000đ</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     3. SẢN PHẨM NỔI BẬT
+     ══════════════════════════════════════════════════════════════ -->
+<section class="el-section" aria-labelledby="products-heading">
+  <div class="el-section__inner">
+    <div class="el-section__header reveal">
+      <h2 class="el-section__title" id="products-heading">Sản phẩm chăm sóc tóc</h2>
+      <button (click)="goToProducts()" class="el-see-all">Xem tất cả</button>
+    </div>
+
+    <div class="el-products-grid">
+      @for (product of eloriaProducts(); track product.id) {
+        <article class="el-pcard">
+          <a [routerLink]="['/product-detail', product.id]" [attr.aria-label]="product.name">
+            <div class="el-pcard__img-wrap">
+              @if (product.imageUrl) {
+                <img [src]="product.imageUrl" [alt]="product.name" class="el-pcard__img" loading="lazy" width="300" height="400">
+              } @else {
+                <span class="el-empty">Chưa có ảnh sản phẩm</span>
+              }
+              @if (product.isNew) { <span class="el-pcard__badge el-pcard__badge--new">Mới</span> }
+            </div>
+          </a>
+          <div class="el-pcard__info">
+            <p class="el-pcard__name">{{ product.name }}</p>
+            @if (product.volume) { <p class="el-pcard__volume">{{ product.volume }}</p> }
+            <div class="el-pcard__price-row">
+              <span class="el-pcard__price">{{ fmt(product.price * (1 - (product.discount ?? 0) / 100)) }}</span>
+              @if ((product.discount ?? 0) > 0) {
+                <span class="el-ccard__price-old">{{ fmt(product.price) }}</span>
+              }
+            </div>
+            <button type="button" class="el-pcard__add-btn" (click)="goToProduct(product.id)">Xem chi tiết</button>
+          </div>
+        </article>
+      } @empty {
+        <p class="el-empty" role="status">Chưa có sản phẩm chăm sóc tóc để hiển thị.</p>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     4. LỌC THEO NHU CẦU (chip)
+     ══════════════════════════════════════════════════════════════ -->
+<section class="el-section el-section--alt" aria-labelledby="combos-heading">
+  <div class="el-section__inner">
+
+    <!-- Tiêu đề -->
+    <div class="el-section__header reveal" style="flex-direction:column;align-items:flex-start;gap:12px">
+      <p style="font-size:11px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--sage-deep)">TÌM COMBO PHÙ HỢP</p>
+      <h2 class="el-section__title" id="combos-heading">Combo tiết kiệm,<br>chăm sóc trọn vẹn</h2>
+    </div>
+
+    <!-- Chip lọc theo nhu cầu -->
+    <div class="el-need-chips reveal">
+      @for (chip of availableNeedChips(); track chip.comboId) {
+        <button class="el-need-chip"
+                [class.el-need-chip--active]="activeChip() === chip.comboId"
+                (click)="selectChip(chip.comboId)"
+                [attr.aria-pressed]="activeChip() === chip.comboId">
+          {{ chip.label }}
+        </button>
+      }
+    </div>
+
+    <!-- Combo grid: Flagship nổi bật + 4 combos còn lại -->
+    <div class="el-combos-grid" id="combos-section">
+
+      <!-- Real flagship product from the API; no mock fallback. -->
+      @for (combo of realCombos(); track combo.id) {
+      <div class="el-ccard" [class.el-ccard--flagship]="combo.isFlagship" [id]="'combo-' + combo.slotId" [style.outline]="activeChip() === combo.slotId ? '2px solid var(--sage)' : null">
+        <div class="el-ccard__img-area">
+          @if (combo.imageUrl) {
+            <img [src]="combo.imageUrl" [alt]="combo.name" loading="lazy"
+                 style="width:100%;height:100%;object-fit:contain;background:var(--bg-soft)">
+          } @else {
+            <div class="el-ccard__img-bg">Chưa có ảnh sản phẩm</div>
+          }
+        </div>
+        <div class="el-ccard__body">
+          <h3 class="el-ccard__name">{{ combo.name }}</h3>
+          @if (combo.comboItems?.length) {
+            <ul class="el-ccard__items">
+              @for (item of combo.comboItems; track item.id) {
+                <li><span class="el-ccard__item-dot"></span>{{ item.componentProductName }} × {{ item.quantity }}</li>
+              }
+            </ul>
+          }
+          @if (combo.description) {
+            <p class="el-ccard__note">{{ combo.description }}</p>
+          }
+          <div class="el-ccard__prices">
+            <span class="el-ccard__price-combo">{{ fmt(combo.price * (1 - (combo.discount ?? 0) / 100)) }}</span>
+            @if ((combo.discount ?? 0) > 0) {
+              <span class="el-ccard__price-old">{{ fmt(combo.price) }}</span>
+              <span class="el-ccard__saving-badge">Tiết kiệm {{ fmt(combo.price * (combo.discount ?? 0) / 100) }}</span>
+            }
+          </div>
+          <div class="el-ccard__cta">
+            <button type="button" class="el-ccard__btn" (click)="goToProduct(combo.id)">Xem chi tiết combo</button>
+          </div>
+        </div>
+      </div>
+       } @empty {
+        <p class="el-empty" role="status">Chưa có combo để hiển thị.</p>
+      }
+
+    </div><!-- /combos-grid -->
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     5. CÂU CHUYỆN THƯƠNG HIỆU
+     ══════════════════════════════════════════════════════════════ -->
+<section class="el-section" aria-labelledby="story-heading">
+  <div class="el-section__inner">
+    <div class="el-story">
+
+      <!-- Ảnh story (placeholder be+lá) -->
+      <div class="el-story__img-wrap reveal">
+        <div class="el-story__img" style="background:linear-gradient(160deg, var(--bg-soft) 0%, var(--bg) 60%); display:flex;align-items:center;justify-content:center;height:100%">
+          <!-- SVG lá trang trí lớn -->
+          <svg viewBox="0 0 300 400" fill="none" style="width:70%;opacity:0.3" aria-hidden="true">
+            <path d="M150 20 C90 70 70 200 120 340 C170 380 230 340 260 260 C290 180 250 80 150 20Z" fill="#8A9A7B"/>
+            <path d="M150 20 L150 340" stroke="#5F6F52" stroke-width="2" stroke-dasharray="8 5"/>
+            <path d="M100 120 C120 108 155 106 180 118" stroke="#5F6F52" stroke-width="1.5" fill="none" opacity="0.6"/>
+            <path d="M90 180 C115 168 155 166 185 178" stroke="#5F6F52" stroke-width="1.5" fill="none" opacity="0.5"/>
+            <path d="M95 240 C120 228 158 226 185 238" stroke="#5F6F52" stroke-width="1.5" fill="none" opacity="0.4"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Văn bản story -->
+      <div class="reveal" style="transition-delay:0.15s">
+        <p class="el-story__eyebrow">Câu chuyện của chúng tôi</p>
+        <h2 class="el-story__title" id="story-heading">
+          Vẻ đẹp tự nhiên,<br>nâng tầm
+        </h2>
+        <p class="el-story__text">
+          ELORIA ra đời từ niềm tin rằng thiên nhiên đã sẵn trao cho chúng ta những gì tốt nhất để nuôi dưỡng mái tóc khỏe đẹp. Chúng tôi lựa chọn kỹ lưỡng từng thành phần chiết xuất từ lá, hoa và tinh dầu tự nhiên — không chất bảo quản gắt, không hương liệu tổng hợp, không thử nghiệm trên động vật.
+        </p>
+        <p class="el-story__text">
+          Mỗi chai ELORIA là lời nhắc nhở nhỏ: hãy trân trọng bản thân, dành những giây phút yên tĩnh chăm sóc cho mái tóc — và cảm nhận sự khác biệt.
+        </p>
+        <button (click)="goToProducts()" class="el-btn-outline" style="display:inline-flex">
+          Khám phá sản phẩm
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     6. CÁCH DÙNG — 3 BƯỚC
+     ══════════════════════════════════════════════════════════════ -->
+<section class="el-section el-section--alt" aria-labelledby="steps-heading">
+  <div class="el-section__inner">
+    <div style="text-align:center;margin-bottom:48px" class="reveal">
+      <p style="font-size:11px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--sage-deep);margin-bottom:8px">HƯỚNG DẪN SỬ DỤNG</p>
+      <h2 class="el-section__title" id="steps-heading">Quy trình 3 bước đơn giản</h2>
+    </div>
+
+    <div class="el-steps">
+
+      <div class="el-step reveal">
+        <div class="el-step__num">
+          <svg width="28" height="28" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M18 4 C10 9 9 20 18 32 C27 20 26 9 18 4Z" fill="rgba(138,154,123,0.15)" stroke="var(--sage)"/>
+            <circle cx="18" cy="28" r="3" fill="rgba(138,154,123,0.4)" stroke="none"/>
+          </svg>
+        </div>
+        <p class="el-step__title">Làm sạch</p>
+        <p class="el-step__sub">Gội đầu với Dầu gội ELORIA. 1–2 lần/tuần dùng Tẩy tế bào chết da đầu trước bước gội.</p>
+      </div>
+
+      <div class="el-step reveal" style="transition-delay:0.12s">
+        <div class="el-step__num">
+          <svg width="28" height="28" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <circle cx="18" cy="20" r="10" stroke="var(--blush)"/>
+            <path d="M18 10 C14 14 12 20 18 28 C24 20 22 14 18 10Z" fill="rgba(227,183,174,0.25)" stroke="none"/>
+          </svg>
+        </div>
+        <p class="el-step__title">Nuôi dưỡng</p>
+        <p class="el-step__sub">Dùng Dầu xả từ giữa đến đuôi tóc, để 3–5 phút. 1–2 lần/tuần thay bằng Ủ tóc phục hồi.</p>
+      </div>
+
+      <div class="el-step reveal" style="transition-delay:0.24s">
+        <div class="el-step__num">
+          <svg width="28" height="28" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <circle cx="18" cy="18" r="10" stroke="var(--amber)"/>
+            <path d="M18 8 L18 5 M26 12 L28 10 M28 18 L31 18 M26 24 L28 26" stroke="var(--amber)" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <p class="el-step__title">Hoàn thiện</p>
+        <p class="el-step__sub">Xịt Dưỡng tóc lên tóc còn ẩm trước khi sấy hoặc tạo kiểu. Tóc bóng mượt, rạng rỡ cả ngày.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     7. ĐÁNH GIÁ KHÁCH HÀNG
+     ══════════════════════════════════════════════════════════════ -->
+<!-- TODO: Thay nội dung review bằng đánh giá thật từ khách hàng -->
+<section class="el-section" aria-labelledby="reviews-heading">
+  <div class="el-section__inner">
+    <div style="text-align:center;margin-bottom:40px" class="reveal">
+      <p style="font-size:11px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--sage-deep);margin-bottom:8px">KHÁCH HÀNG NÓI GÌ</p>
+      <h2 class="el-section__title" id="reviews-heading">Cảm nhận thực tế</h2>
+    </div>
+
+    <div class="el-reviews">
+
+      <div class="el-review-card reveal">
+        <span class="el-review-card__sample-label">(Nội dung mẫu — TODO)</span>
+        <div class="el-review-card__stars">★★★★★</div>
+        <p class="el-review-card__text">
+          "Mình dùng Combo Phục Hồi hơn 1 tháng rồi. Tóc mình vốn khô và xơ vì nhuộm nhiều lần, sau khi dùng thấy mềm hơn hẳn và chải thoáng hơn nhiều. Hương thơm nhẹ nhàng, không cầu kỳ."
+        </p>
+        <p class="el-review-card__name">Minh Anh, 26 tuổi</p>
+        <p class="el-review-card__product">Combo Phục Hồi Mềm Mượt</p>
+      </div>
+
+      <div class="el-review-card reveal" style="transition-delay:0.1s">
+        <span class="el-review-card__sample-label">(Nội dung mẫu — TODO)</span>
+        <div class="el-review-card__stars">★★★★★</div>
+        <p class="el-review-card__text">
+          "Dùng Tẩy tế bào chết da đầu được 3 tuần, cảm giác da đầu thông thoáng hơn hẳn, gàu cũng giảm đáng kể. Bộ Da Đầu Khỏe giờ là must-have trong routine của mình."
+        </p>
+        <p class="el-review-card__name">Thanh Hà, 31 tuổi</p>
+        <p class="el-review-card__product">Combo Da Đầu Khỏe</p>
+      </div>
+
+      <div class="el-review-card reveal" style="transition-delay:0.2s">
+        <span class="el-review-card__sample-label">(Nội dung mẫu — TODO)</span>
+        <div class="el-review-card__stars">★★★★☆</div>
+        <p class="el-review-card__text">
+          "Mình hay vội nên thích Xịt dưỡng tóc nhất — xịt vào là tóc ngay lập tức ống mượt và thơm nhẹ. Combo Bóng Mượt Hằng Ngày rất phù hợp cho dân văn phòng bận rộn như mình."
+        </p>
+        <p class="el-review-card__name">Hùng Dũng, 28 tuổi</p>
+        <p class="el-review-card__product">Combo Bóng Mượt Hằng Ngày</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     8. FAQ
+     ══════════════════════════════════════════════════════════════ -->
+<section class="el-section el-section--alt" aria-labelledby="faq-heading">
+  <div class="el-section__inner">
+    <div style="text-align:center;margin-bottom:40px" class="reveal">
+      <p style="font-size:11px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--sage-deep);margin-bottom:8px">HỎI & ĐÁP</p>
+      <h2 class="el-section__title" id="faq-heading">Câu hỏi thường gặp</h2>
+    </div>
+
+    <div class="el-faq reveal">
+      @for (item of faqItems; track item.q; let i = $index) {
+      <div class="el-faq-item" [class.open]="item.open">
+        <button class="el-faq-item__trigger"
+                (click)="toggleFaq(i)"
+                [attr.aria-expanded]="item.open">
+          <span>{{ item.q }}</span>
+          <span class="el-faq-item__icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </span>
+        </button>
+        <div class="el-faq-item__body">
+          <p class="el-faq-item__answer">{{ item.a }}</p>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     9. NEWSLETTER STRIP
+     ══════════════════════════════════════════════════════════════ -->
+<!-- TODO: kết nối với dịch vụ email marketing thật -->
+<section class="el-nl-strip" aria-labelledby="newsletter-heading">
+  <h2 class="el-nl-strip__title" id="newsletter-heading">
+    Nhận ưu đãi dành riêng cho bạn
+  </h2>
+  <p class="el-nl-strip__sub">
+    Đăng ký nhận tin để nhận ngay voucher 10% cho đơn hàng đầu tiên<br>
+    và cập nhật sản phẩm mới nhất từ ELORIA.
+  </p>
+  <div class="el-nl-strip__form">
+    <input type="email" class="el-nl-strip__input"
+           placeholder="Nhập địa chỉ email…"
+           aria-label="Email đăng ký nhận bản tin ELORIA">
+    <button class="el-nl-strip__btn">Đăng ký ngay</button>
+  </div>
+</section>

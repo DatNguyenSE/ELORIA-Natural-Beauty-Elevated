@@ -1,0 +1,437 @@
+<div class="prod-admin-root">
+  
+  <!-- ══ PAGE HEADER ══ -->
+  <div class="prod-header">
+    <div>
+      <div class="prod-header__badge">
+        <span class="prod-header__dot"></span>
+        <span>QUẢN TRỊ SẢN PHẨM & KHO HÀNG</span>
+      </div>
+      <h1 class="prod-header__title">Sản Phẩm Chăm Sóc Tóc ELORIA</h1>
+      <p class="prod-header__subtitle">
+        Tạo mới, chỉnh sửa dung tích, giá niêm yết và quản lý tồn kho sản phẩm thiên nhiên.
+      </p>
+    </div>
+    <div class="prod-header__count">
+      <span class="prod-header__count-num">{{ products().length }}</span>
+      <span class="prod-header__count-label">Sản phẩm trong kho</span>
+    </div>
+  </div>
+
+  <!-- ══ MAIN GRID ══ -->
+  <div class="prod-grid">
+
+    <!-- ── CỘT TRÁI: FORM TẠO / SỬA ── -->
+    <div class="prod-form-card">
+      <div class="prod-form-header">
+        <div class="prod-form-header__icon" [class.editing]="isEditing">
+          <svg *ngIf="!isEditing" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <svg *ngIf="isEditing" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+        </div>
+        <div>
+          <h2 class="prod-form-header__title">{{ isEditing ? 'Cập Nhật Sản Phẩm' : 'Thêm Sản Phẩm Mới' }}</h2>
+          <p class="prod-form-header__desc">
+            {{ isEditing ? 'Chỉnh sửa thông số cho mã #' + newProduct.id : 'Điền thông tin sản phẩm chăm sóc tóc mới' }}
+          </p>
+        </div>
+        <button *ngIf="isEditing" (click)="onCancelEdit()" type="button" class="prod-cancel-btn">
+          Hủy bỏ
+        </button>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" class="prod-form">
+
+        <!-- Tên sản phẩm -->
+        <div class="prod-form-group">
+          <label class="prod-label">
+            Tên sản phẩm <span class="prod-required">*</span>
+          </label>
+          <input
+            type="text"
+            [(ngModel)]="newProduct.name"
+            name="name"
+            required
+            placeholder="VD: Dầu Gội Thiên Nhiên ELORIA"
+            class="prod-input font-medium"
+          />
+        </div>
+
+        <!-- Dung tích & Thương hiệu -->
+        <div class="prod-form-row">
+          <div class="prod-form-group">
+            <label class="prod-label">Dung tích</label>
+            <input
+              type="text"
+              [(ngModel)]="newProduct.volume"
+              name="volume"
+              placeholder="VD: 400ml, 300ml, 150ml..."
+              class="prod-input"
+            />
+          </div>
+          <div class="prod-form-group">
+            <label class="prod-label">Thương hiệu</label>
+            <input
+              type="text"
+              [(ngModel)]="newProduct.brand"
+              name="brand"
+              placeholder="ELORIA"
+              class="prod-input"
+            />
+          </div>
+        </div>
+
+        <!-- Giá bán & Giảm giá -->
+        <div class="prod-form-row">
+          <div class="prod-form-group">
+            <label class="prod-label">
+              Giá bán (VNĐ) <span class="prod-required">*</span>
+            </label>
+            <input
+              type="number"
+              [(ngModel)]="newProduct.price"
+              name="price"
+              required
+              min="0"
+              placeholder="239000"
+              class="prod-input font-mono"
+            />
+          </div>
+          <div class="prod-form-group">
+            <label class="prod-label">Giảm giá (%)</label>
+            <input
+              type="number"
+              [(ngModel)]="newProduct.discount"
+              name="discount"
+              min="0"
+              max="100"
+              placeholder="0"
+              class="prod-input font-mono"
+            />
+          </div>
+        </div>
+
+        <!-- Tồn kho (Số lượng) & Thể loại -->
+        <div class="prod-form-row">
+          <div class="prod-form-group">
+            <label class="prod-label">
+              Tồn kho (Chai/Hũ) <span class="prod-required">*</span>
+            </label>
+            <input
+              type="number"
+              [(ngModel)]="newProduct.stock"
+              name="stock"
+              required
+              min="0"
+              placeholder="150"
+              class="prod-input font-mono"
+            />
+          </div>
+          <div class="prod-form-group">
+            <label class="prod-label">Thể loại / Danh mục</label>
+            <select
+              [(ngModel)]="newProduct.categoryId"
+              name="categoryId"
+              class="prod-select"
+            >
+              <option *ngFor="let cat of categories()" [value]="cat.id">
+                {{ cat.categoryName }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Nhãn (Label) & Hàng mới về -->
+        <div class="prod-form-row items-center">
+          <div class="prod-form-group flex-1">
+            <label class="prod-label">Nhãn nổi bật (Label)</label>
+            <input
+              type="text"
+              [(ngModel)]="newProduct.label"
+              name="label"
+              list="labelOptions"
+              placeholder="VD: Bán chạy nhất, Flagship..."
+              class="prod-input"
+            />
+            <datalist id="labelOptions">
+              <option value="Bán chạy nhất"></option>
+              <option value="Mới ra mắt"></option>
+              <option value="Flagship"></option>
+              <option value="Yêu thích"></option>
+            </datalist>
+          </div>
+          <div class="prod-checkbox-wrap">
+            <label class="prod-checkbox-label">
+              <input
+                type="checkbox"
+                [(ngModel)]="newProduct.isNew"
+                name="isNew"
+                class="prod-checkbox"
+              />
+              <span>Sản phẩm mới</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Mô tả sản phẩm -->
+        <div class="prod-form-group">
+          <label class="prod-label">Mô tả công dụng & chiết xuất</label>
+          <textarea
+            [(ngModel)]="newProduct.description"
+            name="description"
+            rows="3"
+            placeholder="Mô tả công dụng dưỡng tóc, thành phần thảo mộc tự nhiên, hương thơm..."
+            class="prod-textarea"
+          ></textarea>
+        </div>
+
+        <!-- Ảnh đại diện -->
+        <div class="prod-form-group">
+          <label class="prod-label">Hình ảnh đại diện</label>
+          <div class="prod-upload-zone" [class.has-img]="imagePreview">
+            <input
+              type="file"
+              (change)="onFileSelected($event)"
+              accept="image/*"
+              class="prod-file-input"
+            />
+            <div *ngIf="!imagePreview" class="prod-upload-prompt">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#8A9A7B" stroke-width="1.8" class="mb-2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+              <p class="text-xs font-semibold text-ink">Bấm để tải ảnh sản phẩm lên</p>
+              <p class="text-[11px] text-ink-soft mt-1">PNG, JPG, WEBP chất lượng cao</p>
+            </div>
+            <div *ngIf="imagePreview" class="prod-img-preview">
+              <img [src]="imagePreview" alt="Xem trước ảnh sản phẩm" />
+              <button
+                type="button"
+                (click)="imagePreview = null; selectedFile = null"
+                class="prod-remove-img"
+                title="Gỡ ảnh"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── LIVE PREVIEW THẺ SẢN PHẨM ── -->
+        <div class="prod-preview-card">
+          <span class="prod-preview-card__tag">XEM TRƯỚC HIỂN THỊ</span>
+          <div class="prod-preview-card__box">
+            <div class="prod-preview-card__img">
+              <img
+                [src]="imagePreview || newProduct.imageUrl || '/images/placeholder-product.svg'"
+                alt="Preview"
+              />
+              <span *ngIf="newProduct.label" class="prod-preview-badge">
+                {{ newProduct.label }}
+              </span>
+            </div>
+            <div class="prod-preview-card__info">
+              <p class="prod-preview-brand">{{ newProduct.brand || 'ELORIA' }}</p>
+              <h4 class="prod-preview-name">{{ newProduct.name || 'Tên sản phẩm ELORIA' }}</h4>
+              <p class="prod-preview-volume">Dung tích: {{ newProduct.volume || '400ml' }}</p>
+              <div class="prod-preview-price-row">
+                <span class="prod-preview-price">{{ getCalculatedPrice() | number:'1.0-0' }}₫</span>
+                <span *ngIf="newProduct.discount > 0" class="prod-preview-old-price">
+                  {{ newProduct.price | number:'1.0-0' }}₫
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Nút Submit -->
+        <button
+          type="submit"
+          [disabled]="isLoading || !newProduct.name.trim() || !newProduct.price"
+          class="prod-submit-btn"
+        >
+          <span *ngIf="!isLoading">
+            {{ isEditing ? '✓ Lưu Thay Đổi Sản Phẩm' : '+ Thêm Sản Phẩm Vào Kho' }}
+          </span>
+          <span *ngIf="isLoading" class="flex items-center justify-center gap-2">
+            <svg class="animate-spin text-sm" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+            </svg>
+            <span>Đang lưu sản phẩm...</span>
+          </span>
+        </button>
+
+      </form>
+    </div>
+
+    <!-- ── CỘT PHẢI: BẢNG DANH SÁCH ── -->
+    <div class="prod-list-card">
+      
+      <!-- Topbar Danh Sách -->
+      <div class="prod-list-topbar">
+        <div>
+          <h2 class="prod-list-title">Danh Sách Sản Phẩm ({{ filteredProducts().length }})</h2>
+          <p class="text-xs text-ink-soft mt-1">Quản lý giá, dung tích và kho hàng sản phẩm</p>
+        </div>
+
+        <div class="flex items-center gap-3 flex-wrap">
+          <!-- Lọc danh mục -->
+          <select
+            [ngModel]="selectedCategoryFilter()"
+            (ngModelChange)="selectedCategoryFilter.set($event)"
+            class="prod-filter-select"
+            aria-label="Lọc theo thể loại"
+          >
+            <option value="all">Tất cả danh mục</option>
+            <option *ngFor="let c of categories()" [value]="c.id">
+              {{ c.categoryName }}
+            </option>
+          </select>
+
+          <!-- Thanh tìm kiếm -->
+          <div class="prod-search-wrap">
+            <svg class="prod-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              type="text"
+              [ngModel]="searchKeyword()"
+              (ngModelChange)="searchKeyword.set($event)"
+              placeholder="Tìm theo tên..."
+              class="prod-search-input"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Bảng Sản Phẩm -->
+      <div class="prod-table-wrapper custom-scrollbar">
+        <table class="prod-table">
+          <thead>
+            <tr>
+              <th>Sản Phẩm</th>
+              <th>Dung Tích</th>
+              <th>Giá Bán</th>
+              <th>Tồn Kho</th>
+              <th style="text-align: right; width: 100px;">Thao Tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of filteredProducts()" (click)="onEdit(p)" class="prod-table-row">
+              
+              <!-- Cột Sản phẩm -->
+              <td>
+                <div class="prod-item-cell">
+                  <div class="prod-item-thumb">
+                    <img
+                      [src]="p.imageUrl || '/images/placeholder-product.svg'"
+                      [alt]="p.name"
+                    />
+                  </div>
+                  <div class="prod-item-details">
+                    <h3 class="prod-item-name">{{ p.name }}</h3>
+                    <div class="flex items-center gap-2 mt-1">
+                      <span class="prod-item-brand">{{ p.brand || 'ELORIA' }}</span>
+                      <span *ngIf="p.categoryName" class="prod-item-cat">· {{ p.categoryName }}</span>
+                      <span *ngIf="p.label" class="prod-item-label-chip">{{ p.label }}</span>
+                    </div>
+                  </div>
+                </div>
+              </td>
+
+              <!-- Cột Dung tích -->
+              <td>
+                <span class="prod-vol-badge">
+                  {{ getProductVolume(p) }}
+                </span>
+              </td>
+
+              <!-- Cột Giá bán -->
+              <td>
+                <div class="flex flex-col">
+                  <span class="prod-price-val">
+                    {{ (p.price * (1 - (p.discount ?? 0) / 100)) | number:'1.0-0' }}₫
+                  </span>
+                  <span *ngIf="p.discount && p.discount > 0" class="prod-old-price-val">
+                    {{ p.price | number:'1.0-0' }}₫ (-{{ p.discount }}%)
+                  </span>
+                </div>
+              </td>
+
+              <!-- Cột Tồn kho -->
+              <td>
+                <span
+                  class="prod-stock-badge"
+                  [class.in-stock]="getProductStock(p) > 0"
+                  [class.out-stock]="getProductStock(p) <= 0"
+                >
+                  <span class="prod-stock-dot"></span>
+                  <span *ngIf="getProductStock(p) > 0">Còn {{ getProductStock(p) }} chai</span>
+                  <span *ngIf="getProductStock(p) <= 0">Hết hàng</span>
+                </span>
+              </td>
+
+              <!-- Cột Thao tác -->
+              <td style="text-align: right;">
+                <div class="flex items-center justify-end gap-1" (click)="$event.stopPropagation()">
+                  <button
+                    (click)="onEdit(p)"
+                    type="button"
+                    class="prod-action-btn edit"
+                    title="Chỉnh sửa sản phẩm"
+                  >
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                  </button>
+                  <button
+                    (click)="onDelete(p.id, p.name)"
+                    type="button"
+                    class="prod-action-btn delete"
+                    title="Xóa sản phẩm"
+                  >
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      <line x1="10" y1="11" x2="10" y2="17"></line>
+                      <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Empty row -->
+            <tr *ngIf="filteredProducts().length === 0">
+              <td colspan="5" class="prod-empty-state">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#C4B8AA" stroke-width="1.5" class="mb-3">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+                <h4 class="font-bold text-ink">Không có sản phẩm nào</h4>
+                <p class="text-xs text-ink-soft mt-1">
+                  Không tìm thấy sản phẩm phù hợp. Hãy sử dụng form bên trái để thêm sản phẩm mới.
+                </p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

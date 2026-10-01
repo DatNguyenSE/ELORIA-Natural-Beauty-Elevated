@@ -1,0 +1,215 @@
+<!-- ═══════════════════════════════════════════════════
+     ELORIA — GIỎ HÀNG
+     ═══════════════════════════════════════════════════ -->
+
+<div class="el-cart-root">
+  <div class="el-cart-inner">
+
+    <!-- Back link -->
+    <a routerLink="/" class="el-cart-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5m0 0l7 7m-7-7l7-7"/></svg>
+      Tiếp tục mua sắm
+    </a>
+
+    <div class="el-cart-layout">
+
+      <!-- ── CỘT TRÁI: Danh sách sản phẩm ── -->
+      <div class="el-cart-items-col">
+
+        <!-- Tiêu đề -->
+        <div class="el-cart-heading">
+          <h1 class="el-cart-title">Giỏ hàng của bạn</h1>
+          <p class="el-cart-subtitle">
+            {{ totalItems() }} sản phẩm · Sản phẩm trong giỏ chưa được lưu, hãy thanh toán sớm.
+          </p>
+        </div>
+
+        @if (cartItems().length > 0) {
+
+          <!-- Ưu đãi đang áp dụng -->
+          @if (firstPromotion(); as promo) {
+            <div class="el-promo-banner">
+              <div class="el-promo-banner__left">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="1.8" aria-hidden="true">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>
+                </svg>
+                <div>
+                  <p class="el-promo-banner__title">{{ promo.title }}</p>
+                  <p class="el-promo-banner__desc">{{ promo.description }}</p>
+                </div>
+              </div>
+              @if (promo.code) {
+                <div class="el-promo-banner__code-wrap">
+                  <p class="el-promo-banner__code-label">Mã ưu đãi</p>
+                  <code class="el-promo-banner__code">{{ promo.code }}</code>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Danh sách items -->
+          <div class="el-cart-items-list">
+            <div *ngFor="let item of cartItems()" class="el-cart-item">
+
+              <!-- Ảnh -->
+              <div class="el-cart-item__img-wrap">
+                @if (item.product?.discount) {
+                  <div class="el-cart-item__discount-badge">
+                    -{{ item.product?.discount }}%
+                  </div>
+                }
+                <img [src]="item.product?.imageUrl || '/images/placeholder-product.svg'"
+                     [alt]="item.product?.name"
+                     class="el-cart-item__img">
+              </div>
+
+              <!-- Info -->
+              <div class="el-cart-item__info">
+                <div class="el-cart-item__top">
+                  <div>
+                    <h3 class="el-cart-item__name">{{ item.product?.name }}</h3>
+                    <p class="el-cart-item__brand">ELORIA</p>
+                    <p *ngIf="item.sizeName" class="el-cart-item__size">
+                      Dung tích: <strong>{{ item.sizeName }}</strong>
+                    </p>
+                  </div>
+                  <!-- Giá -->
+                  <div class="el-cart-item__price-wrap">
+                    @if (item.product?.discount && item.product?.discount! > 0) {
+                      <p class="el-cart-item__price-old">
+                        {{ item.product?.price! | number:'1.0-0' }}đ
+                      </p>
+                    }
+                    <p class="el-cart-item__price">
+                      {{ (item.product?.price! * (1 - (item.product?.discount ?? 0)/100)) | number:'1.0-0' }}đ
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Số lượng + xóa -->
+                <div class="el-cart-item__actions">
+                  <div class="el-qty" role="group" aria-label="Số lượng">
+                    <button (click)="updateQuantity(item, item.quantity - 1)"
+                            class="el-qty__btn" aria-label="Giảm số lượng">−</button>
+                    <input type="number" min="1"
+                           [ngModel]="item.quantity"
+                           (ngModelChange)="updateQuantity(item, $event)"
+                           class="el-qty__input"
+                           aria-label="Số lượng">
+                    <button (click)="updateQuantity(item, item.quantity + 1)"
+                            class="el-qty__btn" aria-label="Tăng số lượng">+</button>
+                  </div>
+                  <button (click)="removeItem(item.productId, item.sizeName)"
+                          class="el-cart-item__remove">
+                    Xóa
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        } @else {
+          <!-- Empty state -->
+          <div class="el-cart-empty">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--line)" stroke-width="1.5" aria-hidden="true">
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            <h2 class="el-cart-empty__title">Giỏ hàng trống</h2>
+            <p class="el-cart-empty__text">
+              Bạn chưa có sản phẩm nào trong giỏ. Khám phá bộ sưu tập chăm sóc tóc ELORIA ngay.
+            </p>
+            <a routerLink="/category/products" class="el-btn-sage">
+              Khám phá sản phẩm →
+            </a>
+          </div>
+        }
+
+      </div><!-- /cart items col -->
+
+      <!-- ── CỘT PHẢI: Tóm tắt đơn hàng ── -->
+      <div class="el-cart-summary-col">
+        <div class="el-order-summary">
+
+          <h2 class="el-order-summary__title">Tóm tắt đơn hàng</h2>
+
+          <!-- Mã giảm giá -->
+          <div class="el-coupon-wrap">
+            <div class="el-coupon-row">
+              <input type="text"
+                     [ngModel]="couponCodeInput()"
+                     (ngModelChange)="couponCodeInput.set($event)"
+                     placeholder="Nhập mã giảm giá"
+                     class="el-coupon-input"
+                     aria-label="Mã giảm giá">
+              <button (click)="applyCoupon()"
+                      [disabled]="!couponCodeInput()"
+                      class="el-coupon-btn"
+                      aria-label="Áp dụng mã giảm giá">
+                Áp dụng
+              </button>
+            </div>
+          </div>
+
+          <!-- Thanh tiến độ freeship -->
+          <div class="el-freeship">
+            <div class="el-freeship__labels">
+              <span>Miễn phí giao hàng từ 500.000đ</span>
+              <span class="el-freeship__status">
+                {{ subTotal() >= 500000 ? 'Đạt rồi!' : 'Còn ' + ((500000 - subTotal()) | number:'1.0-0') + 'đ' }}
+              </span>
+            </div>
+            <div class="el-freeship__bar">
+              <div class="el-freeship__fill" [style.width]="(Math.min(subTotal() / 500000, 1) * 100) + '%'"></div>
+            </div>
+          </div>
+
+          <!-- Chi tiết giá -->
+          <div class="el-price-details">
+            <div class="el-price-row">
+              <span class="el-price-row__label">Tạm tính</span>
+              <span class="el-price-row__val">{{ subTotal() | number:'1.0-0' }}đ</span>
+            </div>
+            <div class="el-price-row">
+              <span class="el-price-row__label">Giao hàng</span>
+              <span class="el-price-row__val el-price-row__val--free">
+                {{ shippingFee === 0 ? 'Miễn phí' : (shippingFee | number:'1.0-0') + 'đ' }}
+              </span>
+            </div>
+            <div *ngIf="discount() > 0" class="el-price-row el-price-row--discount">
+              <span class="el-price-row__label">Giảm giá</span>
+              <span class="el-price-row__val">-{{ discount() | number:'1.0-0' }}đ</span>
+            </div>
+          </div>
+
+          <!-- Tổng -->
+          <div class="el-total-row">
+            <span class="el-total-row__label">Tổng cộng</span>
+            <span class="el-total-row__val">{{ finalTotal() | number:'1.0-0' }}đ</span>
+          </div>
+
+          <!-- Nút thanh toán -->
+          <button (click)="onContinueInfoOrder()" class="el-checkout-btn" aria-label="Tiến hành thanh toán">
+            <span>THANH TOÁN</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M5 12h14m-7-7l7 7-7 7"/>
+            </svg>
+          </button>
+
+          <!-- Phương thức thanh toán -->
+          <div class="el-payment-methods">
+            <span class="el-payment-methods__label">Thanh toán qua</span>
+            <div class="el-payment-methods__icons">
+              @for (method of paymentMethods; track method) {
+                <span class="el-payment-icon">{{ method }}</span>
+              }
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /summary -->
+
+    </div><!-- /layout -->
+  </div>
+</div>

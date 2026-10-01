@@ -1,0 +1,153 @@
+<div class="member-admin-root">
+  
+  <!-- ══ PAGE HEADER ══ -->
+  <div class="member-header">
+    <div>
+      <div class="member-header__badge">
+        <span class="member-header__dot"></span>
+        <span>QUẢN LÝ TÀI KHOẢN & KHÁCH HÀNG</span>
+      </div>
+      <h1 class="member-header__title">Danh Sách Thành Viên ELORIA</h1>
+      <p class="member-header__subtitle">
+        Theo dõi thông tin khách hàng, lịch sử mua sắm và chi tiết đơn hàng đã đặt.
+      </p>
+    </div>
+    <div class="member-header__count">
+      <span class="member-header__count-num">{{ members().length }}</span>
+      <span class="member-header__count-label">Thành viên đăng ký</span>
+    </div>
+  </div>
+
+  <!-- ══ MEMBERS GRID ══ -->
+  <div class="member-grid-card">
+    <div class="member-grid">
+      @for (member of members(); track member.id) {
+        <div class="member-card" (click)="selectMember(member.id)">
+          <div class="member-avatar">
+            <img *ngIf="member.imageUrl" [src]="member.imageUrl" alt="avatar">
+            <span *ngIf="!member.imageUrl">{{ member.fullName ? member.fullName.charAt(0).toUpperCase() : 'U' }}</span>
+          </div>
+          <div class="member-info">
+            <p class="member-name">{{ member.fullName || 'Khách hàng' }}</p>
+            <p class="member-email">{{ member.email }}</p>
+          </div>
+        </div>
+      } @empty {
+        <div class="member-empty col-span-full">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#C4B8AA" stroke-width="1.5" class="mx-auto mb-3">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <h4 class="font-bold text-ink">Không có thành viên nào</h4>
+          <p class="text-xs text-ink-soft mt-1">Chưa có người dùng nào đăng ký tài khoản trên hệ thống.</p>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- ══ MODAL CHI TIẾT ══ -->
+  @if (selectedMember(); as user) {
+    <div class="detail-overlay" (click)="closeDetail()">
+      <div class="detail-content custom-scrollbar" (click)="$event.stopPropagation()">
+        
+        <div class="detail-header">
+          <h3 class="detail-title">Hồ Sơ: {{ user.fullName || user.email }}</h3>
+          <button class="close-btn" (click)="closeDetail()" title="Đóng">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        
+        <div class="detail-body">
+          <!-- Thông tin cá nhân -->
+          <div class="personal-info-grid">
+            <div>
+              <span class="info-item-label">Số điện thoại</span>
+              <p class="info-item-value">{{ user.phoneNumber || 'Chưa cung cấp' }}</p>
+            </div>
+            <div>
+              <span class="info-item-label">Địa chỉ nhận hàng</span>
+              <p class="info-item-value">{{ user.address || 'Chưa cập nhật' }}</p>
+            </div>
+            <div>
+              <span class="info-item-label">Giới tính</span>
+              <p class="info-item-value">{{ user.gender || 'Chưa rõ' }}</p>
+            </div>
+            <div>
+              <span class="info-item-label">Tổng số đơn hàng</span>
+              <p class="info-item-value font-mono">{{ user.orders ? user.orders.length : 0 }} đơn</p>
+            </div>
+          </div>
+
+          <!-- Lịch sử đơn hàng -->
+          <div>
+            <h4 class="order-section-title">
+              <span>Lịch Sử Mua Hàng</span>
+              <span class="text-xs font-normal text-ink-soft">({{ user.orders ? user.orders.length : 0 }})</span>
+            </h4>
+
+            @if (user.orders && user.orders.length > 0) {
+              <div class="overflow-x-auto">
+                <table class="order-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 80px;">Mã Đơn</th>
+                      <th>Ngày Đặt</th>
+                      <th>Trạng Thái</th>
+                      <th style="text-align: right;">Tổng Tiền</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (order of user.orders; track order.id) {
+                      <tr class="order-row" (click)="toggleOrder(order.id)">
+                        <td class="font-mono font-bold">#{{ order.id }}</td>
+                        <td>{{ order.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+                        <td>
+                          <span class="status-badge">{{ order.status }}</span>
+                        </td>
+                        <td style="text-align: right;" class="font-bold text-ink">
+                          {{ order.totalAmount | number:'1.0-0' }}₫
+                        </td>
+                      </tr>
+
+                      @if (expandedOrderId() === order.id) {
+                        <tr>
+                          <td colspan="4" style="padding: 0; border-bottom: none;">
+                            <div class="order-items-box">
+                              <p class="text-xs font-bold text-ink-soft uppercase">Chi tiết sản phẩm đã mua:</p>
+                              @for (item of order.items; track item.productId) {
+                                <div class="order-item-row">
+                                  <img [src]="item.imageUrl || '/images/placeholder-product.svg'" alt="Product" class="order-item-thumb">
+                                  <div class="order-item-info">
+                                    <p class="order-item-name">{{ item.name }}</p>
+                                    <div class="order-item-meta flex items-center gap-3">
+                                      <span *ngIf="item.sizeName && !item.sizeName.startsWith('Standard')">Dung tích: {{ item.sizeName }}</span>
+                                      <span>Số lượng: x{{ item.quantity }}</span>
+                                      <span class="font-semibold text-ink">Đơn giá: {{ item.unitPrice | number:'1.0-0' }}₫</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              }
+                            </div>
+                          </td>
+                        </tr>
+                      }
+                    }
+                  </tbody>
+                </table>
+              </div>
+            } @else {
+              <p class="text-sm text-ink-soft py-4 italic">Khách hàng này chưa có đơn hàng nào.</p>
+            }
+          </div>
+        </div>
+
+      </div>
+    </div>
+  }
+
+</div>

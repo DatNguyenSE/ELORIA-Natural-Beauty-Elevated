@@ -1,0 +1,295 @@
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<div class="ord-root">
+
+  <!-- ══ BOTANICAL LUXURY BANNER ══ -->
+  <div class="ord-banner">
+    <div class="ord-banner__img-side">
+      <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=2400&auto=format&fit=crop"
+           class="ord-banner__img" alt="ELORIA Botanical Care">
+    </div>
+    <div class="ord-banner__overlay"></div>
+
+    <div class="ord-banner__content">
+      <nav class="ord-banner__nav">
+        <a routerLink="/" class="ord-banner__back">
+          <svg class="ord-banner__back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
+          </svg>
+          TRANG CHỦ
+        </a>
+        <span class="ord-banner__sep">/</span>
+        <span class="ord-banner__crumb">TÀI KHOẢN & ĐƠN HÀNG</span>
+      </nav>
+
+      <div class="ord-banner__title-block">
+        <div class="ord-banner__tag">
+          <span class="ord-banner__tag-leaf">🌿</span>
+          <span class="ord-banner__tag-text">ELORIA · NHẬT KÝ MUA SẮM</span>
+        </div>
+        <div class="ord-banner__heading-row">
+          <h1 class="ord-banner__title">Lịch Sử Đơn Hàng</h1>
+          <span class="ord-banner__badge">
+            <span class="ord-banner__badge-dot"></span>
+            {{ userOrder().length }} đơn đã đặt
+          </span>
+        </div>
+        <p class="ord-banner__desc">
+          Theo dõi tiến trình các đơn hàng sản phẩm dưỡng tóc và chăm sóc da đầu thuần thiên nhiên của quý khách.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MAIN CONTENT ══ -->
+  <main class="ord-main">
+
+    <!-- ── Filter Tabs ── -->
+    <div class="ord-tabs-card">
+      <div class="ord-tabs">
+        @for (tab of ['Tất cả', 'Pending', 'Placed', 'Paid', 'Cancelled', 'Refunded']; track tab) {
+          <button
+            class="ord-tab"
+            [class.ord-tab--active]="currentStatus() === tab"
+            (click)="setStatus(tab)">
+            <span class="ord-tab__dot ord-tab__dot--{{ tab | lowercase }}"></span>
+            <span class="ord-tab__text">
+              {{ tab === 'Tất cả'    ? 'Tất cả đơn'  :
+                 tab === 'Pending'   ? 'Chờ thanh toán' :
+                 tab === 'Placed'    ? 'Đã tiếp nhận'   :
+                 tab === 'Paid'      ? 'Thành công'     :
+                 tab === 'Cancelled' ? 'Đã hủy'         : 'Hoàn trả' }}
+            </span>
+          </button>
+        }
+      </div>
+
+      <div class="ord-tabs-count">
+        <svg class="ord-tabs-count__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 4.5h18m-14 7.5h10m-6 7.5h2"/>
+        </svg>
+        <span>Hiển thị <strong>{{ filteredOrders().length }}</strong> đơn</span>
+      </div>
+    </div>
+
+    <!-- ── Empty State ── -->
+    <div *ngIf="filteredOrders().length === 0" class="ord-empty">
+      <div class="ord-empty__icon-wrap">
+        <svg class="ord-empty__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119.993zM9.75 10.5a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75.75.75 0 01-.75-.75V11.25a.75.75 0 01.75-.75zm4.5 0a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75.75.75 0 01-.75-.75V11.25a.75.75 0 01.75-.75z" />
+        </svg>
+      </div>
+      <h3 class="ord-empty__title">Không có đơn hàng nào</h3>
+      <p class="ord-empty__subtitle">
+        Quý khách hiện chưa có đơn hàng nào trong trạng thái này. Hãy trải nghiệm các bộ sản phẩm chăm sóc tóc thiên nhiên từ ELORIA.
+      </p>
+      <a routerLink="/" class="ord-empty__action">
+        <span>Khám phá bộ sưu tập</span>
+        <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- ── Order List ── -->
+    <div *ngIf="filteredOrders().length > 0" class="ord-list">
+      @for (order of filteredOrders(); track order.id) {
+
+        <div class="ord-card" [class.ord-card--expanded]="expandedId === order.id">
+
+          <!-- ── Card Main Row ── -->
+          <div class="ord-card__row" (click)="toggleExpand(order.id)">
+
+            <!-- Thumbnail with count badge -->
+            <div class="ord-card__thumb-wrap">
+              <img [src]="order.items[0]?.imageUrl || 'assets/images/default-product.png'"
+                   [alt]="order.items[0]?.name"
+                   class="ord-card__thumb">
+              @if (order.items.length > 1) {
+                <span class="ord-card__thumb-badge" title="{{ order.items.length }} sản phẩm">+{{ order.items.length - 1 }}</span>
+              }
+            </div>
+
+            <!-- Info columns -->
+            <div class="ord-card__info">
+
+              <!-- Col 1: Mã đơn & Ngày -->
+              <div class="ord-card__col ord-card__col--id">
+                <span class="ord-card__label">Mã đơn hàng</span>
+                <span class="ord-card__code">#{{ order.id }}</span>
+                <span class="ord-card__date">{{ order.createdAt | date:'dd/MM/yyyy · HH:mm' }}</span>
+              </div>
+
+              <!-- Col 2: Sản phẩm tiêu biểu -->
+              <div class="ord-card__col ord-card__col--prod">
+                <span class="ord-card__label">Sản phẩm chính</span>
+                <p class="ord-card__prod-name">{{ order.items[0]?.name }}</p>
+                <span class="ord-card__prod-sub">
+                  {{ order.items.length }} món trong kiện hàng
+                </span>
+              </div>
+
+              <!-- Col 3: Trạng thái -->
+              <div class="ord-card__col ord-card__col--status">
+                <span class="ord-card__label">Tình trạng</span>
+                <div class="ord-status ord-status--{{ order.status | lowercase }}">
+                  <span class="ord-status__dot"></span>
+                  <span class="ord-status__text">
+                    {{ order.status === 'Paid'      ? 'Thanh toán thành công' :
+                       order.status === 'Pending'   ? 'Chờ thanh toán' :
+                       order.status === 'Placed'    ? 'Đã tiếp nhận'   :
+                       order.status === 'Cancelled' ? 'Đã hủy đơn'     :
+                       order.status === 'Refunded'  ? 'Đã hoàn tiền'   : order.status }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Col 4: Tổng thanh toán -->
+              <div class="ord-card__col ord-card__col--total">
+                <span class="ord-card__label">Tổng thanh toán</span>
+                <span class="ord-card__price">{{ order.totalAmount | number:'1.0-0' }}₫</span>
+              </div>
+
+            </div>
+
+            <!-- Toggle Chevron Button -->
+            <button class="ord-card__chevron"
+                    [class.ord-card__chevron--open]="expandedId === order.id"
+                    aria-label="Xem chi tiết đơn hàng"
+                    type="button">
+              <svg class="ord-chevron-svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- ── Expandable Detail Panel ── -->
+          <div class="ord-detail" [class.ord-detail--open]="expandedId === order.id">
+            <div class="ord-detail__inner">
+
+              <!-- Left: Items in Order -->
+              <div class="ord-detail__items-section">
+                <div class="ord-detail__header">
+                  <h4 class="ord-detail__title">Chi tiết sản phẩm</h4>
+                  <span class="ord-detail__count">{{ order.items.length }} sản phẩm</span>
+                </div>
+
+                <div class="ord-detail__items">
+                  @for (item of order.items; track item.productId) {
+                    <div class="ord-detail__item">
+                      <div class="ord-detail__item-thumb">
+                        <img [src]="item.imageUrl || 'assets/images/default-product.png'"
+                             [alt]="item.name"
+                             class="ord-detail__item-img">
+                      </div>
+                      <div class="ord-detail__item-body">
+                        <h5 class="ord-detail__item-name">{{ item.name }}</h5>
+                        <div class="ord-detail__item-meta-wrap">
+                          <span class="ord-detail__item-vol" *ngIf="item.sizeName">
+                            Dung tích: {{ item.sizeName }}
+                          </span>
+                          <span class="ord-detail__item-qty">
+                            Số lượng: {{ item.quantity }}
+                          </span>
+                        </div>
+                      </div>
+                      <div class="ord-detail__item-price-wrap">
+                        <span class="ord-detail__item-price">{{ item.unitPrice | number:'1.0-0' }}₫</span>
+                        <span class="ord-detail__item-subtotal">Thành tiền: {{ (item.unitPrice * item.quantity) | number:'1.0-0' }}₫</span>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Right: Cost Summary & Action buttons -->
+              <div class="ord-detail__sidebar">
+
+                <!-- Cost Summary Card -->
+                <div class="ord-summary">
+                  <h4 class="ord-summary__title">Tóm tắt thanh toán</h4>
+
+                  <div class="ord-summary__row">
+                    <span class="ord-summary__lbl">Tiền hàng tạm tính</span>
+                    <span class="ord-summary__val">{{ order.totalAmount | number:'1.0-0' }}₫</span>
+                  </div>
+
+                  <div class="ord-summary__row">
+                    <span class="ord-summary__lbl">Phí giao hàng</span>
+                    <span class="ord-summary__val ord-summary__val--free">Miễn phí giao hàng</span>
+                  </div>
+
+                  <div class="ord-summary__divider"></div>
+
+                  <div class="ord-summary__row ord-summary__row--total">
+                    <div>
+                      <span class="ord-summary__total-lbl">Tổng thanh toán</span>
+                      <span class="ord-summary__vat">(Đã bao gồm VAT)</span>
+                    </div>
+                    <span class="ord-summary__total-val">{{ order.totalAmount | number:'1.0-0' }}₫</span>
+                  </div>
+                </div>
+
+                <!-- Action Buttons based on status -->
+                <div class="ord-actions">
+                  @switch (order.status) {
+                    @case ('Pending') {
+                      <a [routerLink]="['/order-detail', order.id]" class="ord-btn ord-btn--primary">
+                        <svg class="ord-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-6 3.75h16.5a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0020.25 4.5H3.75A2.25 2.25 0 001.5 6.75v10.5A2.25 2.25 0 003.75 21z"/>
+                        </svg>
+                        Thanh toán ngay
+                      </a>
+                      <a [routerLink]="['/order-detail', order.id]" class="ord-btn ord-btn--outline">
+                        <svg class="ord-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        Xem chi tiết & Hủy đơn
+                      </a>
+                    }
+                    @case ('Paid') {
+                      <a [routerLink]="['/order-detail', order.id]" class="ord-btn ord-btn--primary">
+                        <svg class="ord-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.25V3.375c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v10.875c0 .621.504 1.125 1.125 1.125h1.5"/>
+                        </svg>
+                        Theo dõi vận chuyển
+                      </a>
+                      <a [routerLink]="['/order-detail', order.id]" class="ord-btn ord-btn--outline">
+                        <svg class="ord-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+                        </svg>
+                        Xem hóa đơn chi tiết
+                      </a>
+                    }
+                    @case ('Cancelled') {
+                      <a routerLink="/" class="ord-btn ord-btn--outline">
+                        <svg class="ord-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/>
+                        </svg>
+                        Đặt lại sản phẩm
+                      </a>
+                    }
+                    @default {
+                      <a [routerLink]="['/order-detail', order.id]" class="ord-btn ord-btn--outline">
+                        <svg class="ord-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        Xem chi tiết đơn hàng
+                      </a>
+                    }
+                  }
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      }
+    </div>
+
+  </main>
+</div>

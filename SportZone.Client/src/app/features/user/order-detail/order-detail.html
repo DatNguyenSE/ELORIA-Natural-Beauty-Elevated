@@ -1,0 +1,278 @@
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<div class="ord-det-root">
+
+  <!-- ══ TOP BAR & HEADER ══ -->
+  <header class="ord-det-header">
+    <div class="ord-det-header__inner">
+
+      <a routerLink="/order-user" class="ord-det-back">
+        <svg class="ord-det-back__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
+        </svg>
+        <span>LỊCH SỬ ĐƠN HÀNG</span>
+      </a>
+
+      <div class="ord-det-title-row" *ngIf="order()">
+        <div>
+          <div class="ord-det-tag">
+            <span class="ord-det-tag__leaf">🌿</span>
+            <span>ELORIA BOTANICALS · HÓA ĐƠN CHI TIẾT</span>
+          </div>
+          <h1 class="ord-det-title">Chi Tiết Đơn Hàng</h1>
+          <div class="ord-det-meta">
+            <span class="ord-det-code">Mã đơn: <strong>#{{ order()?.id }}</strong></span>
+            <span class="ord-det-meta__sep">•</span>
+            <span>Ngày tạo: {{ order()?.createdAt | date:'dd/MM/yyyy · HH:mm' }}</span>
+          </div>
+        </div>
+
+        <div class="ord-det-header__total">
+          <span class="ord-det-header__total-lbl">Tổng thanh toán</span>
+          <span class="ord-det-header__total-val">{{ order()?.totalAmount | number:'1.0-0' }}₫</span>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ══ MAIN CONTAINER ══ -->
+  <main class="ord-det-main">
+
+    <!-- Loading Skeleton -->
+    <div *ngIf="isLoading()" class="ord-det-loading">
+      <div class="ord-det-loading__spinner"></div>
+      <p class="ord-det-loading__text">Đang tải thông tin đơn hàng #{{ orderId() }}...</p>
+    </div>
+
+    <!-- Not Found State -->
+    <div *ngIf="!isLoading() && !order()" class="ord-det-notfound">
+      <div class="ord-det-notfound__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/>
+        </svg>
+      </div>
+      <h2 class="ord-det-notfound__title">Không tìm thấy đơn hàng #{{ orderId() }}</h2>
+      <p class="ord-det-notfound__desc">
+        Đơn hàng này không tồn tại hoặc quý khách chưa đăng nhập đúng tài khoản đã đặt đơn.
+      </p>
+      <a routerLink="/order-user" class="ord-det-notfound__btn">
+        Quay lại danh sách đơn hàng
+      </a>
+    </div>
+
+    <!-- Order Content -->
+    <div *ngIf="!isLoading() && order()" class="ord-det-grid">
+
+      <!-- Left Column: Status Alert & Items -->
+      <div class="ord-det-col-main">
+
+        <!-- Status Alert Banner -->
+        @if (order()?.status === 'Pending') {
+          <div class="ord-alert ord-alert--pending">
+            <div class="ord-alert__icon-wrap">
+              <svg class="ord-alert__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div class="ord-alert__body">
+              <div class="ord-alert__badge">Chờ thanh toán</div>
+              <h2 class="ord-alert__title">Đơn hàng đang chờ thanh toán</h2>
+              <p class="ord-alert__desc">
+                Đơn hàng của quý khách đã được khởi tạo thành công. Vui lòng hoàn tất thanh toán để ELORIA bắt đầu chuẩn bị và đóng gói kiện hàng thảo mộc gửi đến bạn.
+              </p>
+              <div class="ord-alert__actions">
+                <button (click)="handlePayment(orderId())"
+                        [disabled]="isProcessingPayment()"
+                        class="ord-alert__btn ord-alert__btn--primary">
+                  <svg *ngIf="!isProcessingPayment()" class="ord-alert__btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-6 3.75h16.5a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0020.25 4.5H3.75A2.25 2.25 0 001.5 6.75v10.5A2.25 2.25 0 003.75 21z"/>
+                  </svg>
+                  <span *ngIf="!isProcessingPayment()">Thanh toán ngay với VNPay / Ngân hàng</span>
+                  <span *ngIf="isProcessingPayment()">Đang kết nối cổng thanh toán...</span>
+                </button>
+
+                <button (click)="handleCancel()" class="ord-alert__btn ord-alert__btn--ghost">
+                  Hủy đơn hàng
+                </button>
+              </div>
+            </div>
+          </div>
+        } @else if (order()?.status === 'Paid') {
+          <div class="ord-alert ord-alert--paid">
+            <div class="ord-alert__icon-wrap">
+              <svg class="ord-alert__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+              </svg>
+            </div>
+            <div class="ord-alert__body">
+              <div class="ord-alert__badge ord-alert__badge--paid">Đã thanh toán</div>
+              <h2 class="ord-alert__title">Thanh toán hoàn tất</h2>
+              <p class="ord-alert__desc">
+                Cảm ơn bạn đã lựa chọn ELORIA. Kiện hàng đang được các chuyên viên đóng gói cẩn trọng và chuẩn bị bàn giao cho đối tác vận chuyển.
+              </p>
+            </div>
+          </div>
+        } @else if (order()?.status === 'Cancelled') {
+          <div class="ord-alert ord-alert--cancelled">
+            <div class="ord-alert__icon-wrap">
+              <svg class="ord-alert__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </div>
+            <div class="ord-alert__body">
+              <div class="ord-alert__badge ord-alert__badge--cancelled">Đã hủy</div>
+              <h2 class="ord-alert__title">Đơn hàng đã được hủy</h2>
+              <p class="ord-alert__desc">
+                Đơn hàng này đã được hủy theo yêu cầu. Quý khách có thể lựa chọn và đặt lại bất kỳ sản phẩm nào khi có nhu cầu.
+              </p>
+            </div>
+          </div>
+        }
+
+        <!-- Botanical Quality Promise / Note -->
+        <div class="ord-det-notice">
+          <div class="ord-det-notice__icon">🌿</div>
+          <div class="ord-det-notice__text">
+            <strong>Cam kết thảo mộc ELORIA:</strong> Toàn bộ tinh chất chăm sóc tóc được chiết xuất từ dược liệu thiên nhiên lành tính, đóng gói thủ công chuẩn mực để giữ trọn vẹn hương thơm và dưỡng chất.
+          </div>
+        </div>
+
+        <!-- Product List Card -->
+        <div class="ord-det-card">
+          <div class="ord-det-card__header">
+            <h3 class="ord-det-card__title">
+              Sản phẩm trong kiện hàng
+              <span class="ord-det-card__badge">{{ order()?.items?.length || 0 }} sản phẩm</span>
+            </h3>
+          </div>
+
+          <div class="ord-det-items">
+            @for (item of order()?.items; track $index) {
+              <div class="ord-det-item">
+                <div class="ord-det-item__thumb">
+                  <img [src]="item.imageUrl || 'assets/images/default-product.png'"
+                       [alt]="item.name"
+                       class="ord-det-item__img">
+                </div>
+
+                <div class="ord-det-item__main">
+                  <div class="ord-det-item__head">
+                    <h4 class="ord-det-item__name">{{ item.name }}</h4>
+                    <span class="ord-det-item__price">{{ item.unitPrice | number:'1.0-0' }}₫</span>
+                  </div>
+
+                  <div class="ord-det-item__specs">
+                    <div class="ord-det-spec" *ngIf="item.sizeName">
+                      <span class="ord-det-spec__lbl">Dung tích:</span>
+                      <span class="ord-det-spec__val">{{ item.sizeName }}</span>
+                    </div>
+                    <div class="ord-det-spec">
+                      <span class="ord-det-spec__lbl">Số lượng:</span>
+                      <span class="ord-det-spec__val">x{{ item.quantity }}</span>
+                    </div>
+                  </div>
+
+                  <div class="ord-det-item__foot">
+                    <span class="ord-det-item__subtotal">
+                      Thành tiền: <strong>{{ (item.unitPrice * item.quantity) | number:'1.0-0' }}₫</strong>
+                    </span>
+                    <a routerLink="/" class="ord-det-item__link">Xem sản phẩm</a>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Summary & Payment Info -->
+      <div class="ord-det-col-side">
+
+        <!-- Payment Breakdown Card -->
+        <div class="ord-det-summary-card">
+          <h3 class="ord-det-summary-card__title">Tóm tắt thanh toán</h3>
+
+          <div class="ord-det-summary-rows">
+            <div class="ord-det-summary-row">
+              <span>Tổng tiền hàng</span>
+              <span>{{ (order()?.subTotal || order()?.totalAmount) | number:'1.0-0' }}₫</span>
+            </div>
+            <div class="ord-det-summary-row">
+              <span>Phí vận chuyển</span>
+              <span class="ord-det-free">Miễn phí giao hàng</span>
+            </div>
+            @if (order()?.discountAmount && order()?.discountAmount !== 0) {
+              <div class="ord-det-summary-row">
+                <span>Ưu đãi giảm giá</span>
+                <span class="ord-det-discount">-{{ order()?.discountAmount | number:'1.0-0' }}₫</span>
+              </div>
+            }
+          </div>
+
+          <div class="ord-det-summary-card__divider"></div>
+
+          <div class="ord-det-summary-total">
+            <div>
+              <span class="ord-det-summary-total__lbl">Tổng thanh toán</span>
+              <span class="ord-det-summary-total__sub">Đã bao gồm thuế & phí</span>
+            </div>
+            <span class="ord-det-summary-total__val">{{ order()?.totalAmount | number:'1.0-0' }}₫</span>
+          </div>
+
+          <!-- Payment Method Details -->
+          <div class="ord-det-paymethod">
+            <span class="ord-det-paymethod__lbl">Phương thức thanh toán</span>
+            <div class="ord-det-paymethod__box">
+              <svg class="ord-det-paymethod__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.5M4.5 21V10.5m-3 0h21"/>
+              </svg>
+              <div>
+                <p class="ord-det-paymethod__name">{{ order()?.payment?.paymentMethod || 'Chuyển khoản / VNPAY Gateway' }}</p>
+                <p class="ord-det-paymethod__status">
+                  Tình trạng: <span>{{ order()?.payment?.paymentStatus || (order()?.status === 'Paid' ? 'Đã thanh toán' : 'Chờ thanh toán') }}</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main CTA button -->
+          @if (order()?.status === 'Pending') {
+            <button (click)="handlePayment(orderId())"
+                    [disabled]="isProcessingPayment()"
+                    class="ord-det-cta">
+              <span *ngIf="!isProcessingPayment()">TIẾP TỤC THANH TOÁN</span>
+              <span *ngIf="isProcessingPayment()">ĐANG XỬ LÝ...</span>
+              <svg class="ord-det-cta__icon" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+          } @else {
+            <a routerLink="/" class="ord-det-cta ord-det-cta--shop">
+              <span>TIẾP TỤC MUA SẮM</span>
+              <svg class="ord-det-cta__icon" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+              </svg>
+            </a>
+          }
+
+        </div>
+
+        <!-- Help card -->
+        <div class="ord-det-help">
+          <h4 class="ord-det-help__title">Hỗ trợ đơn hàng ELORIA</h4>
+          <p class="ord-det-help__desc">
+            Đội ngũ chuyên viên chăm sóc sắc đẹp sẵn sàng hỗ trợ quý khách về hành trình đơn hàng hoặc tư vấn liệu trình dưỡng tóc.
+          </p>
+          <a href="mailto:support@eloria.vn" class="ord-det-help__link">
+            <span>Email hỗ trợ: support@eloria.vn</span>
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+</div>

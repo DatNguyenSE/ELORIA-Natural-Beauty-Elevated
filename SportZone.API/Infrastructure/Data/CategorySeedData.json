@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "categoryName": "Giày Cỏ Nhân Tạo (TF)",
+    "description": "Giày đinh dăm TF chuyên dụng cho mặt sân cỏ nhân tạo tại Việt Nam. Đế cao su bám sân, hỗ trợ xoay trở linh hoạt và giảm chấn thương gối."
+  },
+  {
+    "id": 2,
+    "categoryName": "Giày Cỏ Tự Nhiên (FG)",
+    "description": "Giày đinh cao FG dành cho sân cỏ thật 11 người. Tối ưu hóa độ bám, hỗ trợ bứt tốc và sút bóng uy lực cho cầu thủ chuyên nghiệp."
+  },
+  {
+    "id": 3,
+    "categoryName": "Giày Futsal / IC",
+    "description": "Giày đế bằng IC (Indoor Court) dành cho sân trong nhà, sàn gỗ hoặc sân bê tông. Đế cao su không để lại vết, hỗ trợ kỹ thuật gầm giày (toe punt)."
+  },
+  {
+    "id": 4,
+    "categoryName": "Áo Đấu CLB",
+    "description": "Trang phục thi đấu chính hãng các CLB hàng đầu Premier League, La Liga, Bundesliga... Phiên bản Player và Fan chất lượng cao."
+  },
+  {
+    "id": 5,
+    "categoryName": "Áo Đấu Đội Tuyển",
+    "description": "Bộ quần áo bóng đá các Đội tuyển Quốc gia: Việt Nam, Brazil, Argentina, Đức... Mẫu áo mới nhất cho World Cup và Euro."
+  },
+  {
+    "id": 6,
+    "categoryName": "Bóng Đá",
+    "description": "Bóng thi đấu tiêu chuẩn FIFA Quality Pro, bóng tập luyện và bóng Futsal nảy thấp. Đa dạng size 4, size 5 từ các thương hiệu lớn."
+  },
+  {
+    "id": 7,
+    "categoryName": "Găng Tay & Đồ Thủ Môn",
+    "description": "Găng tay thủ môn chuyên nghiệp (có xương/không xương), mút dính cao cấp cùng quần áo đệm bảo hộ cho người gác đền."
+  },
+  {
+    "id": 8,
+    "categoryName": "Phụ Kiện Bóng Đá",
+    "description": "Các trang bị thiết yếu khác: Tất chống trượt, ốp ống đồng, túi đựng giày, băng keo thể thao và bình nước."
+  }
+]

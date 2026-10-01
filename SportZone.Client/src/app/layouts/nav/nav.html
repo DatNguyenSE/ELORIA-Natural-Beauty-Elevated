@@ -1,0 +1,273 @@
+<!-- ═══════════════════════════════════════════════════
+     ELORIA — HEADER / NAV
+     ═══════════════════════════════════════════════════ -->
+
+<!-- ── ANNOUNCEMENT BAR ── -->
+<div class="eloria-ann-bar">
+  {{ currentAnnouncement }}
+</div>
+
+<!-- ── HEADER STICKY ── -->
+<header class="eloria-header" [class.scrolled]="isScrolled">
+  <div class="eloria-header__inner">
+
+    <!-- LOGO -->
+    <a routerLink="/" class="eloria-logo" aria-label="ELORIA — Trang chủ">
+      <!-- Icon lá trong vòng tròn (SVG inline) -->
+      <svg class="eloria-logo__icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="16" cy="16" r="15" stroke="#8A9A7B" stroke-width="1.2" fill="none"/>
+        <path d="M16 5C10 9.5 8.5 18 16 27C23.5 18 22 9.5 16 5Z" fill="#8A9A7B" opacity="0.75"/>
+        <path d="M16 5L16 27" stroke="#5F6F52" stroke-width="0.9" stroke-linecap="round"/>
+        <path d="M11 14 C13 13 16 12 19 14" stroke="#5F6F52" stroke-width="0.7" stroke-linecap="round" fill="none" opacity="0.6"/>
+        <path d="M10.5 18 C13 17 16 16.5 20 18" stroke="#5F6F52" stroke-width="0.7" stroke-linecap="round" fill="none" opacity="0.4"/>
+      </svg>
+      <span class="eloria-logo__name">ELORIA</span>
+      <span class="eloria-logo__tag">Natural Beauty Elevated</span>
+    </a>
+
+    <!-- NAV DESKTOP -->
+    <nav aria-label="Menu chính">
+      <ul class="eloria-nav">
+        <li><a routerLink="/category/products" routerLinkActive="active" class="eloria-nav__link">Sản phẩm</a></li>
+        <li><a routerLink="/combos" routerLinkActive="active" class="eloria-nav__link">Combo</a></li>
+        <li><a routerLink="/story" routerLinkActive="active" class="eloria-nav__link">Câu chuyện</a></li>
+        <li><a routerLink="/hair-care" routerLinkActive="active" class="eloria-nav__link">Chăm sóc tóc</a></li>
+        <li><a routerLink="/category/sale" routerLinkActive="active" class="eloria-nav__link" style="color:var(--sage-deep)">Khuyến mãi</a></li>
+      </ul>
+    </nav>
+
+    <!-- ACTIONS -->
+    <div class="eloria-actions">
+
+      <!-- Search (desktop) -->
+      <div class="eloria-search-wrap">
+        <input
+          #searchInput
+          (input)="onSearch(searchInput.value)"
+          (focus)="isSearching = filteredProducts().length > 0"
+          class="eloria-search"
+          type="search"
+          placeholder="Tìm sản phẩm…"
+          aria-label="Tìm kiếm sản phẩm"
+        />
+        <svg class="eloria-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+
+        <!-- Dropdown kết quả -->
+        <div *ngIf="isSearching && filteredProducts().length > 0" class="eloria-search-dropdown">
+          <div class="eloria-search-header">Kết quả ({{ filteredProducts().length }})</div>
+          <ul>
+            <li *ngFor="let product of filteredProducts()"
+                (click)="goToProduct(product.id)"
+                class="eloria-search-item">
+              <img [src]="product.imageUrl || '/images/placeholder-product.svg'"
+                   [alt]="product.name"
+                   class="eloria-search-item__img"
+                   loading="lazy">
+              <div>
+                <p class="eloria-search-item__name">{{ product.name }}</p>
+                <p class="eloria-search-item__price">{{ product.price | number:'1.0-0' }}đ</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div *ngIf="isSearching" (click)="isSearching = false" class="fixed inset-0 bg-transparent z-[199]"></div>
+      </div>
+
+      <!-- Tài khoản -->
+      <button (click)="toggleLoginModal()" class="eloria-action-btn" aria-label="Tài khoản">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </button>
+
+      <!-- Yêu thích -->
+      <button class="eloria-action-btn hidden sm:flex" aria-label="Sản phẩm yêu thích">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+      </button>
+
+      <!-- Giỏ hàng -->
+      <button (click)="onCart()" class="eloria-action-btn" aria-label="Giỏ hàng">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+      </button>
+
+      <!-- Hamburger (mobile) -->
+      <button (click)="toggleMobileMenu()" class="eloria-hamburger" aria-label="Mở menu">
+        <span class="eloria-hamburger__bar"></span>
+        <span class="eloria-hamburger__bar"></span>
+        <span class="eloria-hamburger__bar"></span>
+      </button>
+    </div>
+
+  </div>
+</header>
+
+<!-- ── MOBILE DRAWER ── -->
+<div class="eloria-mobile-drawer" [class.open]="isMobileMenuOpen">
+  <div class="eloria-mobile-drawer__backdrop" (click)="toggleMobileMenu()"></div>
+  <nav class="eloria-mobile-drawer__panel" aria-label="Menu di động">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span style="font-family:var(--font-serif);font-size:18px;letter-spacing:0.18em;color:var(--ink)">ELORIA</span>
+      <button (click)="toggleMobileMenu()" class="eloria-action-btn" aria-label="Đóng menu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <ul class="eloria-mobile-nav">
+      <li><a routerLink="/category/products" class="eloria-mobile-nav__link" (click)="toggleMobileMenu()">Sản phẩm</a></li>
+      <li><a routerLink="/combos" class="eloria-mobile-nav__link" (click)="toggleMobileMenu()">Combo</a></li>
+      <li><a routerLink="/story" class="eloria-mobile-nav__link" (click)="toggleMobileMenu()">Câu chuyện</a></li>
+      <li><a routerLink="/hair-care" class="eloria-mobile-nav__link" (click)="toggleMobileMenu()">Chăm sóc tóc</a></li>
+      <li><a routerLink="/category/sale" class="eloria-mobile-nav__link" (click)="toggleMobileMenu()" style="color:var(--sage-deep)">Khuyến mãi</a></li>
+    </ul>
+    <div style="margin-top:auto">
+      <button (click)="toggleLoginModal(); toggleMobileMenu()" class="eloria-btn-primary" style="width:100%">
+        Đăng nhập / Đăng ký
+      </button>
+    </div>
+  </nav>
+</div>
+
+<!-- ── LOGIN / REGISTER MODAL ── -->
+@if(this.accountService.currentUser() === null) {
+  <div *ngIf="isLoginModalOpen" class="eloria-modal-backdrop" (click)="closeOnBackdrop($event)">
+    <div class="eloria-modal" role="dialog" aria-modal="true" aria-label="Đăng nhập ELORIA">
+
+      <button (click)="toggleLoginModal()" class="eloria-modal__close" aria-label="Đóng">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+
+      <!-- Logo nhỏ trong modal -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
+        <svg width="22" height="22" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <circle cx="16" cy="16" r="15" stroke="#8A9A7B" stroke-width="1.2" fill="none"/>
+          <path d="M16 5C10 9.5 8.5 18 16 27C23.5 18 22 9.5 16 5Z" fill="#8A9A7B" opacity="0.75"/>
+          <path d="M16 5L16 27" stroke="#5F6F52" stroke-width="0.9" stroke-linecap="round"/>
+        </svg>
+        <span style="font-family:var(--font-serif);font-size:16px;letter-spacing:0.18em;color:var(--ink)">ELORIA</span>
+      </div>
+
+      <!-- Bước 1: Email -->
+      <div *ngIf="creds.step === 1" class="eloria-animate-up">
+        <h2 style="font-family:var(--font-serif);font-size:26px;font-weight:500;color:var(--ink);margin-bottom:8px">
+          Chào mừng bạn
+        </h2>
+        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:24px;line-height:1.6">
+          Đăng nhập hoặc tạo tài khoản để nhận ưu đãi riêng từ ELORIA.
+        </p>
+
+        <form (submit)="$event.preventDefault(); onContinue()" style="display:flex;flex-direction:column;gap:14px">
+          <input [(ngModel)]="creds.email"
+                 name="email"
+                 autocomplete="username"
+                 type="email"
+                 placeholder="Địa chỉ email *"
+                 class="eloria-input"
+                 [class.error]="creds.emailError"
+                 aria-label="Địa chỉ email">
+          <p *ngIf="creds.emailError" style="font-size:12px;color:#c0392b;margin-top:-8px">Vui lòng nhập email hợp lệ.</p>
+
+          <label style="display:flex;gap:10px;align-items:flex-start;font-size:13px;cursor:pointer">
+            <input [(ngModel)]="creds.old" name="old" type="checkbox" style="margin-top:3px;accent-color:var(--sage)">
+            <span style="color:var(--ink-soft)">Tôi trên 16 tuổi và đồng ý với <a href="#" style="color:var(--sage-deep);text-decoration:underline">Điều khoản sử dụng</a> *</span>
+          </label>
+          <label style="display:flex;gap:10px;align-items:flex-start;font-size:13px;cursor:pointer">
+            <input [(ngModel)]="creds.condition" name="condition" type="checkbox" style="margin-top:3px;accent-color:var(--sage)">
+            <span style="color:var(--ink-soft)">Tôi đã đọc và đồng ý với <a href="#" style="color:var(--sage-deep);text-decoration:underline">Chính sách bảo mật</a> *</span>
+          </label>
+
+          <button type="submit" class="eloria-btn-primary" style="width:100%;margin-top:8px">
+            Tiếp tục →
+          </button>
+
+          <div style="display:flex;gap:10px">
+            <button type="button" (click)="openFaceBook()" style="flex:1;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--bg);cursor:pointer;font-size:12px;color:var(--ink);display:flex;align-items:center;justify-content:center;gap:6px">
+              <svg width="16" height="16" fill="#1877F2" viewBox="0 0 24 24"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036c-2.048 0-2.733.984-2.733 2.039v1.932h3.588l-.642 3.667h-2.946v7.98c-5.083.7-5.083.7-5.083.7z"/></svg>
+              Facebook
+            </button>
+            <button type="button" (click)="openGoogle()" style="flex:1;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--bg);cursor:pointer;font-size:12px;color:var(--ink);display:flex;align-items:center;justify-content:center;gap:6px">
+              <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+              Google
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Bước 2: Mật khẩu -->
+      <div *ngIf="creds.step === 2" class="eloria-animate-up">
+        <h2 style="font-family:var(--font-serif);font-size:24px;font-weight:500;color:var(--ink);margin-bottom:8px">
+          Xin chào trở lại!
+        </h2>
+        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:24px">{{ creds.email }}</p>
+        <form (submit)="$event.preventDefault(); onLogin()" style="display:flex;flex-direction:column;gap:14px">
+          <!-- Hidden input username để browser liên kết password với username -->
+          <input type="text" name="username" [value]="creds.email" autocomplete="username" style="display:none" aria-hidden="true">
+          <div style="position:relative">
+            <input [(ngModel)]="creds.password"
+                   name="password"
+                   [type]="isPasswordVisible ? 'text' : 'password'"
+                   autocomplete="current-password"
+                   placeholder="Mật khẩu *"
+                   class="eloria-input"
+                   aria-label="Mật khẩu">
+            <button type="button" (click)="togglePassword()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--ink-soft)" aria-label="Hiện/ẩn mật khẩu">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <path *ngIf="!isPasswordVisible" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle *ngIf="!isPasswordVisible" cx="12" cy="12" r="3"/>
+                <path *ngIf="isPasswordVisible" d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line *ngIf="isPasswordVisible" x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+            </button>
+          </div>
+          <button type="submit" [disabled]="isSubmitting" class="eloria-btn-primary" style="width:100%">
+            <span *ngIf="!isSubmitting">Đăng nhập →</span>
+            <span *ngIf="isSubmitting" style="opacity:0.7">Đang xử lý...</span>
+          </button>
+          <button type="button" (click)="creds.step = 1" style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--ink-soft);text-decoration:underline;text-align:center">
+            Đổi tài khoản khác
+          </button>
+        </form>
+      </div>
+
+      <!-- Bước 3: OTP -->
+      <div *ngIf="creds.step === 3" class="eloria-animate-up">
+        <h2 style="font-family:var(--font-serif);font-size:24px;font-weight:500;color:var(--ink);margin-bottom:8px;text-align:center">
+          Xác thực email
+        </h2>
+        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:24px;text-align:center">
+          Mã 6 chữ số đã được gửi tới<br>
+          <strong style="color:var(--ink)">{{ creds.email }}</strong>
+        </p>
+        <form (submit)="$event.preventDefault(); onVerifyOtp()" style="display:flex;flex-direction:column;gap:16px">
+          <input [(ngModel)]="creds.otpCode"
+                 name="otpCode"
+                 type="text" maxlength="6"
+                 autocomplete="one-time-code"
+                 placeholder="— — — — — —"
+                 class="eloria-input"
+                 style="text-align:center;letter-spacing:0.4em;font-size:24px;font-weight:600"
+                 aria-label="Mã OTP 6 chữ số">
+          <button type="submit" [disabled]="isSubmitting" class="eloria-btn-primary" style="width:100%">
+            <span *ngIf="!isSubmitting">Xác nhận →</span>
+            <span *ngIf="isSubmitting" style="opacity:0.7">Đang kiểm tra...</span>
+          </button>
+          <button type="button" (click)="creds.step = 2" style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--ink-soft);text-decoration:underline;text-align:center">
+            Quay lại
+          </button>
+        </form>
+      </div>
+
+    </div><!-- /eloria-modal -->
+  </div><!-- /eloria-modal-backdrop -->
+} @else {
+  <app-user-drawer [isOpen]="isLoginModalOpen" (closeDrawer)="toggleLoginModal()" (logoutUser)="logout()"></app-user-drawer>
+}
