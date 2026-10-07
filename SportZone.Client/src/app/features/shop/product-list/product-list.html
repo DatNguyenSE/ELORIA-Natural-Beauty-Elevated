@@ -59,7 +59,7 @@
       </svg>
       Sắp xếp
     </span>
-    <select (change)="onSortChange($event)" class="el-cat-sort-select" aria-label="Sắp xếp sản phẩm">
+    <select [value]="selectedSort()" (change)="onSortChange($event)" class="el-cat-sort-select" aria-label="Sắp xếp sản phẩm">
       <option value="newest">Mới nhất</option>
       <option value="oldest">Cũ nhất</option>
       <option value="priceAsc">Giá tăng dần</option>
@@ -74,8 +74,15 @@
     <p>Đang tải sản phẩm...</p>
   </div>
 
+  @if (error()) {
+    <div class="el-cat-empty" role="alert">
+      <p>{{ error() }}</p>
+      <button type="button" class="el-cat-filter-btn" (click)="retry()">Thử lại</button>
+    </div>
+  }
+
   <!-- Empty -->
-  <div *ngIf="products().length === 0 && !isLoading()" class="el-cat-empty">
+  <div *ngIf="products().length === 0 && !isLoading() && !error()" class="el-cat-empty">
     <p>Không tìm thấy sản phẩm nào trong mục này.</p>
   </div>
 
@@ -88,12 +95,12 @@
       <div class="el-cat-card__img-wrap">
 
         <!-- Badges -->
-        @if (p.discount && p.discount > 0) {
-          <div class="el-cat-card__badge el-cat-card__badge--sale">-{{ p.discount }}%</div>
+        @if (finalPrice(p) < originalPrice(p)) {
+          <div class="el-cat-card__badge el-cat-card__badge--sale">-{{ salePercent(p) }}%</div>
         }
         @if (p.isNew) {
           <div class="el-cat-card__badge el-cat-card__badge--new"
-               [style.top]="(p.discount && p.discount > 0) ? '34px' : '10px'">
+               [style.top]="(finalPrice(p) < originalPrice(p)) ? '34px' : '10px'">
             Mới
           </div>
         }
@@ -117,11 +124,11 @@
       <div class="el-cat-card__info">
         <div class="el-cat-card__price-row">
           <span class="el-cat-card__price"
-                [class.el-cat-card__price--sale]="p.discount && p.discount > 0">
-            {{ (p.price * (1 - (p.discount ?? 0) / 100)) | number:'1.0-0' }}đ
+                [class.el-cat-card__price--sale]="finalPrice(p) < originalPrice(p)">
+            {{ finalPrice(p) | number:'1.0-0' }}đ
           </span>
-          @if (p.discount && p.discount > 0) {
-            <span class="el-cat-card__price-old">{{ p.price | number:'1.0-0' }}đ</span>
+          @if (finalPrice(p) < originalPrice(p)) {
+            <span class="el-cat-card__price-old">{{ originalPrice(p) | number:'1.0-0' }}đ</span>
           }
         </div>
         <p class="el-cat-card__name">{{ p.name }}</p>

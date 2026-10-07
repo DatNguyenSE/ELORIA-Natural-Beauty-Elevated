@@ -9,7 +9,7 @@ import { ProductService } from '../../../core/services/product-service';
 import { OrderService } from '../../../core/services/order-service';
 import { AccountService } from '../../../core/services/account-service';
 
-import { ELORIA_PRODUCTS } from '../../../shared/data/eloria-products';
+import { isBestSeller } from '../../../shared/utils/catalog';
 import { ELORIA_COMBOS, ComboWithCalc } from '../../../shared/data/eloria-combos';
 import { PRODUCT_MAP } from '../../../shared/data/eloria-products';
 import { formatPrice } from '../../../shared/utils/format-vnd';
@@ -34,9 +34,7 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
       .replace(/đ/gi, 'd').toLowerCase().replace(/\beloria\b/g, '')
       .replace(/\s+/g, ' ').trim();
   }
-  readonly eloriaProducts = computed(() => this.products().filter(product =>
-    !product.isDelete && ELORIA_PRODUCTS.some(template =>
-      [template.name, template.nameShort].some(name => this.normalizeName(name) === this.normalizeName(product.name)))));
+  readonly bestSellingProducts = computed(() => this.products().filter(isBestSeller));
   readonly realCombos = computed(() => this.products().filter(product => !product.isDelete).flatMap(product => {
     const template = ELORIA_COMBOS.find(combo => this.normalizeName(combo.name) === this.normalizeName(product.name));
     return template ? [{ ...product, slotId: template.id, isFlagship: !!template.isFlagship }] : [];

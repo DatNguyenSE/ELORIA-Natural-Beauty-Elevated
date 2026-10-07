@@ -29,7 +29,7 @@ export const routes: Routes = [
             { path: '', component: Home },
             { path: 'category/:id', component: ProductList },
             { path: 'combos', redirectTo: 'category/combos', pathMatch: 'full' },
-            { path: 'story', component: Home },
+            { path: 'story', loadComponent: () => import('./features/shop/story/story').then(m => m.Story), title: 'Câu chuyện ELORIA | Một chút dịu dàng, mỗi ngày' },
             { path: 'hair-care', redirectTo: 'category/hair-care', pathMatch: 'full' },
             { path: 'product-detail/:id', component: ProductDetail },
             { path: 'payment-fail/:orderId', component: PaymentFail },

@@ -103,12 +103,12 @@
 <section class="el-section" aria-labelledby="products-heading">
   <div class="el-section__inner">
     <div class="el-section__header reveal">
-      <h2 class="el-section__title" id="products-heading">Sản phẩm chăm sóc tóc</h2>
+      <h2 class="el-section__title" id="products-heading">Sản phẩm bán chạy</h2>
       <button (click)="goToProducts()" class="el-see-all">Xem tất cả</button>
     </div>
 
     <div class="el-products-grid">
-      @for (product of eloriaProducts(); track product.id) {
+      @for (product of bestSellingProducts(); track product.id) {
         <article class="el-pcard">
           <a [routerLink]="['/product-detail', product.id]" [attr.aria-label]="product.name">
             <div class="el-pcard__img-wrap">
@@ -133,7 +133,7 @@
           </div>
         </article>
       } @empty {
-        <p class="el-empty" role="status">Chưa có sản phẩm chăm sóc tóc để hiển thị.</p>
+        <p class="el-empty" role="status">Chưa có sản phẩm bán chạy để hiển thị.</p>
       }
     </div>
   </div>
