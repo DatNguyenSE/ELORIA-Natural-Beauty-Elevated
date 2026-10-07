@@ -49,6 +49,9 @@ export class ProductService {
     formData.append('Brand', productData.brand || '');
     formData.append('Description', productData.description || '');
     formData.append('CategoryId', productData.categoryId.toString());
+    formData.append('Volume', productData.volume || '');
+    formData.append('Stock', (productData.stock ?? 0).toString());
+    formData.append('ProductType', productData.productType || 'single');
 
     // 2. Các trường mới thêm (Discount, IsNew, Featured)
     formData.append('Discount', (productData.discount || 0).toString());
@@ -84,6 +87,9 @@ export class ProductService {
     formData.append('Brand', productData.brand || '');
     formData.append('Description', productData.description || '');
     formData.append('CategoryId', (productData.categoryId ?? 0).toString());
+    formData.append('Volume', productData.volume || '');
+    formData.append('Stock', (productData.stock ?? 0).toString());
+    formData.append('ProductType', productData.productType || 'single');
 
     // 2. Các trường bổ sung mới
     formData.append('Discount', (productData.discount ?? 0).toString());

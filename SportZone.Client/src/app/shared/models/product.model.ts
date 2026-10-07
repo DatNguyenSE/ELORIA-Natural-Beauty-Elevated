@@ -11,6 +11,7 @@ export interface Product {
   price: number;
   imageUrl?: string;
   isDelete?: boolean;
+  isDeleted?: boolean;
 
   discount?: number; 
   isNew?: boolean;
@@ -46,5 +47,4 @@ export interface ProductSize {
   sizeName: string;
   quantity: number;
 }
-
 
