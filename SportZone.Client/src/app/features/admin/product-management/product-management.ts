@@ -35,6 +35,7 @@ export class ProductManagement implements OnInit {
   getEmptyProduct() {
     return {
       id: 0,
+      productSizeId: 0,
       name: '',
       volume: '400ml',
       description: '',
@@ -46,6 +47,7 @@ export class ProductManagement implements OnInit {
       isNew: true,
       label: 'Bán chạy nhất',
       imageUrl: '',
+      productType: 'single',
     };
   }
 
@@ -92,7 +94,7 @@ export class ProductManagement implements OnInit {
     if (product.productSizes && product.productSizes.length > 0) {
       return product.productSizes.reduce((sum, s) => sum + (s.quantity || 0), 0);
     }
-    return product.quantity || 0;
+    return product.stock ?? product.quantity ?? 0;
   }
 
   // Giá sau giảm giá
@@ -107,9 +109,11 @@ export class ProductManagement implements OnInit {
     this.isEditing = true;
     const stock = this.getProductStock(product);
     const volume = this.getProductVolume(product);
+    const primarySize = product.productSizes?.[0];
 
     this.newProduct = {
       id: product.id,
+      productSizeId: primarySize?.id || 0,
       name: product.name,
       volume: volume,
       description: product.description || '',
@@ -121,6 +125,7 @@ export class ProductManagement implements OnInit {
       isNew: product.isNew ?? true,
       label: product.label || '',
       imageUrl: product.imageUrl || '',
+      productType: product.productType || 'single',
     };
 
     this.imagePreview = product.imageUrl || null;
@@ -174,8 +179,12 @@ export class ProductManagement implements OnInit {
       discount: Number(this.newProduct.discount) || 0,
       isNew: !!this.newProduct.isNew,
       label: this.newProduct.label?.trim() || null,
+      volume: volumeLabel,
+      stock: stockQty,
+      productType: this.newProduct.productType || 'single',
       productSizes: [
         {
+          id: this.newProduct.productSizeId,
           sizeName: volumeLabel,
           quantity: stockQty,
         },

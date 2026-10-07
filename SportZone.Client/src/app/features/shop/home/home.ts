@@ -9,8 +9,12 @@ import { ProductService } from '../../../core/services/product-service';
 import { OrderService } from '../../../core/services/order-service';
 import { AccountService } from '../../../core/services/account-service';
 
+<<<<<<< HEAD
 import { isBestSeller } from '../../../shared/utils/catalog';
 import { ELORIA_COMBOS, ComboWithCalc } from '../../../shared/data/eloria-combos';
+=======
+import { ELORIA_COMBOS } from '../../../shared/data/eloria-combos';
+>>>>>>> 287b20c5f0974cf49794f244e9038e54e74b8e8a
 import { PRODUCT_MAP } from '../../../shared/data/eloria-products';
 import { formatPrice } from '../../../shared/utils/format-vnd';
 
@@ -34,8 +38,17 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
       .replace(/đ/gi, 'd').toLowerCase().replace(/\beloria\b/g, '')
       .replace(/\s+/g, ' ').trim();
   }
+<<<<<<< HEAD
   readonly bestSellingProducts = computed(() => this.products().filter(isBestSeller));
   readonly realCombos = computed(() => this.products().filter(product => !product.isDelete).flatMap(product => {
+=======
+  readonly eloriaProducts = computed(() => this.products().filter(product => {
+    const isDeleted = product.isDeleted ?? product.isDelete ?? false;
+    const isCombo = product.productType?.toLowerCase() === 'combo';
+    return !isDeleted && !isCombo;
+  }));
+  readonly realCombos = computed(() => this.products().filter(product => !(product.isDeleted ?? product.isDelete ?? false)).flatMap(product => {
+>>>>>>> 287b20c5f0974cf49794f244e9038e54e74b8e8a
     const template = ELORIA_COMBOS.find(combo => this.normalizeName(combo.name) === this.normalizeName(product.name));
     return template ? [{ ...product, slotId: template.id, isFlagship: !!template.isFlagship }] : [];
   }).sort((a, b) => Number(b.isFlagship) - Number(a.isFlagship)));

@@ -26,6 +26,12 @@ namespace SportZone.Application.Services
 
             var entity = mapper.Map<Product>(createDto);
 
+            if (entity.ProductSizes.Count > 0)
+            {
+                entity.Stock = entity.ProductSizes.Sum(size => size.Quantity);
+                entity.Volume ??= entity.ProductSizes.First().SizeName;
+            }
+
             await uow.ProductRepository.AddAsync(entity);
             await uow.Complete();
             return mapper.Map<ProductDto>(entity);
@@ -111,6 +117,7 @@ namespace SportZone.Application.Services
             {
                 var existingSizes = product.ProductSizes.ToList(); //Danh sách Size trong DB
                 var sizeIdsToCleanCart = new List<int>(); // danh sach SizeID cần chỉnh trong user cart
+                var retainedSizeIds = new HashSet<int>();
 
 
                 var SizeIdsInDto = productDto.ProductSizes.Where(s => s.Id != 0).Select(s => s.Id).ToList(); //danh sách SizeID có trong DTO (cả update và thêm mới)
@@ -129,6 +136,7 @@ namespace SportZone.Application.Services
                     {
                         sizeInDb.Quantity = dtoSize.Quantity;
                         sizeInDb.IsActive = true;
+                        retainedSizeIds.Add(sizeInDb.Id);
 
                         // nếu số lượng size sau khi cập nhật <=0 hoặc tổng số lượng size đó trong tất cả giỏ hàng lớn hơn số lượng mới cập nhật -> Thêm vào danh sách dọn dẹp giỏ hàng
                         if (sizeInDb.Quantity <= 0 || quantityInAllCart > dtoSize.Quantity) sizeIdsToCleanCart.Add(sizeInDb.Id);
@@ -143,8 +151,7 @@ namespace SportZone.Application.Services
                 }
 
                 // B. Xử lý Soft Delete (Ẩn size)
-                var dtoSizeIds = productDto.ProductSizes.Select(s => s.Id).ToList(); //lấy danh sách SizeID từ DTO 
-                var sizesToDisable = existingSizes.Where(s => s.Id != 0 && !dtoSizeIds.Contains(s.Id)).ToList();
+                var sizesToDisable = existingSizes.Where(s => !retainedSizeIds.Contains(s.Id)).ToList();
                 // so sanh với Db xem sizeId nào không có trong dto mà có trong Db thì chuyển Size trong Db IsActive = false 
 
                 foreach (var size in sizesToDisable)
@@ -167,6 +174,13 @@ namespace SportZone.Application.Services
                         uow.CartRepository.RemoveCartItem(cartItem);
                     }
                 }
+
+                product.Stock = product.ProductSizes
+                    .Where(size => size.IsActive)
+                    .Sum(size => size.Quantity);
+                product.Volume = productDto.Volume
+                    ?? productDto.ProductSizes.FirstOrDefault()?.SizeName
+                    ?? product.Volume;
             }
 
             // 5. Lưu tất cả thay đổi trong 1 Transaction duy nhất
